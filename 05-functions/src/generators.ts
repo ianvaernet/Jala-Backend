@@ -1,14 +1,12 @@
 function* genFibonacci() {
-  let number1 = 0;
-  let number2 = 1;
-  let previosNumber1;
+  let n1 = 0;
+  let n2 = 1;
   while (true) {
-    yield number1;
-    previosNumber1 = number1;
-    number1 = number2;
-    number2 = previosNumber1 + number2;
+    yield n1;
+    [n1, n2] = [n2, n1 + n2];
   }
 }
+
 const fibonacci = genFibonacci();
 
 console.log(fibonacci.next().value);

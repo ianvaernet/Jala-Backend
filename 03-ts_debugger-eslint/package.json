@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "start": "ts-node src",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "test": "jest --coverage"
   },
   "author": "",
   "license": "ISC",
