@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  express-db:
+    image: mysql:latest
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    container_name: express-db
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - './local-db:/var/lib/mysql'
+  express-app:
+    image: express-app:latest
+    container_name: express-app
+    ports:
+      - '8000:3000'
+    depends_on:
+      - 'express-db'
+    links:
+      - 'express-db'
+    env_file:
+      - .env
+    volumes:
+      - .:/home/node/app
+    restart: always
+    entrypoint:
+      [
+        '/bin/sh',
+        '-c',
+        'npx concurrently "npm run build:watch" "npm run local-start"',
+      ]
