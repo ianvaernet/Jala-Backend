@@ -4,7 +4,7 @@ import http from 'http';
 import router from './router';
 import { BaseException } from './shared';
 
-const app: Express = express();
+export const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -4,8 +4,8 @@ export type ListUserParams = { filters?: Record<string, unknown>; pageNumber?: n
 
 export interface IUserService {
   listUsers({ pageNumber, pageSize }: ListUserParams): Promise<User[]>;
-  createUser(createUserInput: any): Promise<User>;
+  createUser(newUser: User): Promise<void>;
   getUser(id: number): Promise<User>;
-  updateUser(id: number, updateUserInput: any): Promise<User>;
+  updateUser(id: number, updatedUser: User): Promise<User>;
   deleteUser(id: number): Promise<void>;
 }

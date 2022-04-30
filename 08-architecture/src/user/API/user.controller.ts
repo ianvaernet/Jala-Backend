@@ -1,10 +1,11 @@
 import express, { Request } from 'express';
 import { body } from 'express-validator';
 import { BadRequestException } from '../../shared';
-import { DI, DIContainer } from '../../inversify.config';
+import { DIContainer } from '../../inversify.config';
 import { UserMapper } from '../infrastructure';
 import { IUserService } from '../core';
 import { validateRequest } from '../../shared';
+import { DI } from '../../types';
 
 const router = express.Router();
 const userService = DIContainer.get<IUserService>(DI.IUserService);
@@ -78,7 +79,8 @@ router.post(
   async (req: Request, res, next) => {
     try {
       validateRequest(req);
-      const user = await userService.createUser(req.body);
+      const user = UserMapper.toDomain(req.body);
+      await userService.createUser(user);
       res.status(201).json({ data: UserMapper.toDTO(user) });
     } catch (err) {
       next(err);
@@ -166,7 +168,7 @@ router.put('/:id', async function (req, res, next) {
   try {
     const userId = parseInt(req.params.id);
     if (isNaN(userId)) throw new BadRequestException('Invalid user id');
-    const user = await userService.updateUser(userId, req.body);
+    const user = await userService.updateUser(userId, UserMapper.toDomain(req.body));
     const userDTO = UserMapper.toDTO(user);
     res.status(200).json({ data: userDTO });
   } catch (error) {

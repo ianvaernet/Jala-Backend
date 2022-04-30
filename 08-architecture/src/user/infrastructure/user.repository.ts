@@ -25,11 +25,12 @@ export class UserRepository implements IUserRepository {
     return this.repo.findOneBy({ id });
   }
 
-  deleteUserById(id: number) {
-    return this.repo.delete(id);
+  async deleteUserById(id: number) {
+    const result = await this.repo.delete(id);
+    return result.affected ? true : false;
   }
 
-  save(user: User) {
-    return this.repo.save(user);
+  async save(user: User) {
+    await this.repo.save(user);
   }
 }

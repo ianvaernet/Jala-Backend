@@ -19,7 +19,7 @@ const specs = swaggerJsdoc({
       },
     ],
   },
-  apis: ['./src/controllers/user.controller.ts'],
+  apis: ['./src/*/API/user.controller.ts'],
 });
 
 router.use('/users', UserController);

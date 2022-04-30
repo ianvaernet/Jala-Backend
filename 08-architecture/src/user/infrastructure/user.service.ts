@@ -1,9 +1,8 @@
-import { User } from '../core';
-import { DI } from '../../inversify.config';
 import { inject, injectable } from 'inversify';
+import { IUserRepository, IUserService, User } from '../core';
 import { NotFoundException } from '../../shared';
-import { IUserRepository, IUserService } from '../core';
- 
+import { DI } from '../../types';
+
 @injectable()
 export class UserService implements IUserService {
   @inject(DI.IUserRepository) private userRepository: IUserRepository;
@@ -12,13 +11,8 @@ export class UserService implements IUserService {
     return this.userRepository.listUsers({});
   }
 
-  createUser(createUserInput: any): Promise<User> {
-    const user = new User();
-    user.firstName = createUserInput.firstName;
-    user.lastName = createUserInput.lastName;
-    user.email = createUserInput.email;
-    user.password = createUserInput.password;
-    return this.userRepository.save(user);
+  createUser(newUser: User): Promise<void> {
+    return this.userRepository.save(newUser);
   }
 
   async getUser(id: number) {
@@ -27,17 +21,17 @@ export class UserService implements IUserService {
     return user;
   }
 
-  async updateUser(id: number, updateUserInput: any) {
+  async updateUser(id: number, updatedUser: User) {
     const user = await this.getUser(id);
-    if (updateUserInput.firstName) user.firstName = updateUserInput.firstName;
-    if (updateUserInput.lastName) user.lastName = updateUserInput.lastName;
-    if (updateUserInput.lastName) user.email = updateUserInput.email;
+    if (updatedUser.firstName) user.firstName = updatedUser.firstName;
+    if (updatedUser.lastName) user.lastName = updatedUser.lastName;
+    if (updatedUser.email) user.email = updatedUser.email;
     this.userRepository.save(user);
     return user;
   }
 
   async deleteUser(id: number) {
-    const result = await this.userRepository.deleteUserById(id);
-    if (result.affected === 0) throw new NotFoundException('User not found');
+    const success = await this.userRepository.deleteUserById(id);
+    if (!success) throw new NotFoundException('User not found');
   }
 }
