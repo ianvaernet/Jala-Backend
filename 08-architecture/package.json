@@ -1,24 +1,26 @@
 {
   "name": "express-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
     "build-image": "docker build -t express-app --no-cache .",
     "build-image:dev": "docker build -t express-app --no-cache -f Dockerfile.dev .",
-    "create-test-db": "export $(cat .env | xargs) && CONTAINER_ID=$(docker ps --filter name=\"express-db\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID mysql -u$DB_USER -p$DB_PASSWORD -e \"CREATE DATABASE ${DB_NAME}_test\"",
+    "create-test-db": "export $(cat .env | xargs) && CONTAINER_ID=$(docker ps --filter name=\"express-db\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID mysql -uroot -p$DB_ROOT_PASSWORD -e \"CREATE DATABASE ${DB_NAME}_test; GRANT ALL ON ${DB_NAME}_test.* TO 'user'@'%';\"",
     "init": "npm run build-image:dev && npm run start && sleep 10 && npm run create-test-db",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --report-unused-disable-directives",
     "local-start": "nodemon dist",
-    "local-test": "jest --coverage",
+    "local-test": "NODE_ENV=test && jest",
+    "local-test:coverage": "NODE_ENV=test && jest --coverage",
     "migrate": "typeorm migration:create",
     "mysql": "export $(cat .env | xargs) && CONTAINER_ID=$(docker ps --filter name=\"express-db\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID mysql -u$DB_USER -p$DB_PASSWORD $DB_NAME",
     "restart": "npm run stop && npm run start",
     "ssh": "CONTAINER_ID=$(docker ps --filter name=\"express-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID sh",
     "start": "docker-compose -p express-app up -d",
     "stop": "docker-compose -p express-app stop",
-    "test": "CONTAINER_ID=$(docker ps --filter name=\"express-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test"
+    "test": "CONTAINER_ID=$(docker ps --filter name=\"express-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test",
+    "test:coverage": "CONTAINER_ID=$(docker ps --filter name=\"express-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test"
   },
   "dependencies": {
     "debug": "~2.6.9",

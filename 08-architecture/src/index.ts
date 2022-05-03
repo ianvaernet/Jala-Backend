@@ -4,6 +4,8 @@ import http from 'http';
 import router from './router';
 import { BaseException } from './shared';
 
+const PORT = process.env.NODE_ENV !== 'test' ? process.env.PORT : process.env.PORT + '5';
+
 export const app: Express = express();
 
 app.use(express.json());
@@ -21,9 +23,11 @@ app.use(function (req: Request, res: Response, next: CallableFunction) {
   res.status(404).send('Error 404: Not Found');
 });
 
-app.set('port', process.env.PORT);
+app.set('port', PORT);
 const server = http.createServer(app);
-server.listen(process.env.PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`⚡️ Server running at http://localhost:${process.env.HOST_PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  server.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`⚡️ Server running at http://localhost:${process.env.HOST_PORT}`);
+  });
+}

@@ -1,7 +1,10 @@
 import agent from 'supertest';
 import { app } from '../../../index';
+import { mySQLDataSource } from '../../../shared';
 
 const request = agent(app);
+
+beforeAll(async () => await mySQLDataSource.initialize());
 
 describe('User Controller', () => {
   it('Should create a new user', () =>
