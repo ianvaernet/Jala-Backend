@@ -24,6 +24,7 @@ export class PieceRepository implements IPieceRepository {
   }
 
   async save(piece: Piece) {
-    await this.repo.save(PieceMapper.toPersistence(piece));
+    const { id } = await this.repo.save(PieceMapper.toPersistence(piece));
+    piece.setId(id);
   }
 }

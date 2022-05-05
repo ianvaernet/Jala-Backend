@@ -24,6 +24,7 @@ export class GameRepository implements IGameRepository {
   }
 
   async save(game: Game) {
-    await this.repo.save(GameMapper.toPersistence(game));
+    const { id } = await this.repo.save(GameMapper.toPersistence(game));
+    game.setId(id);
   }
 }

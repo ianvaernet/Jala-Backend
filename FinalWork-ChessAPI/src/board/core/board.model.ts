@@ -3,7 +3,11 @@ import { Position } from '../../position';
 
 export class Board {
   private game: Game;
-  constructor(private grid: Position[]) {}
+  constructor(private grid: Position[]) {
+    grid.forEach((position) => {
+      if (position.getOccupiedBy()) position.getOccupiedBy().setBoard(this);
+    });
+  }
 
   getGrid(): Position[] {
     return this.grid;

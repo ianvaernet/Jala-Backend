@@ -1,6 +1,6 @@
 import { GameMapper } from '../../game';
 import { PositionMapper } from '../../position';
-import { King, Piece, Queen } from '../core';
+import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from '../core';
 import { PieceEntity, PieceType } from '../infrastructure';
 import { PieceDTO } from './piece.dto';
 
@@ -13,10 +13,10 @@ export class PieceMapper {
     const pieceTypes = {
       King: King,
       Queen: Queen,
-      Pawn: Queen,
-      Bishop: Queen,
-      Knight: Queen,
-      Rook: Queen,
+      Pawn: Pawn,
+      Bishop: Bishop,
+      Knight: Knight,
+      Rook: Rook,
     };
     return new pieceTypes[pieceEntity.type](pieceEntity.color, PositionMapper.toDomain(pieceEntity.position));
   }

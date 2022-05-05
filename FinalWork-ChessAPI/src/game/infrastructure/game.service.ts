@@ -20,7 +20,7 @@ export class GameService implements IGameService {
     if (currentGame) await this.gameRepository.delete(currentGame);
     const board = this.boardService.initiateBoard();
     const game = new Game(GameStatus.Ready, board, 'White');
-    this.gameRepository.save(game);
+    await this.gameRepository.save(game);
     board.setGame(game);
     await this.boardService.saveBoard(board);
     return game;

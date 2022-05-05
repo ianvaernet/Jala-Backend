@@ -19,6 +19,6 @@ export class PieceEntity {
   @Column({ nullable: false })
   type: PieceType;
 
-  @ManyToOne(() => GameEntity, (game) => game.pieces, { nullable: false })
+  @ManyToOne(() => GameEntity, (game) => game.pieces, { nullable: false, onDelete: 'CASCADE' })
   game: GameEntity;
 }
