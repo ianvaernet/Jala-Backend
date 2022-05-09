@@ -1,6 +1,6 @@
 import { Color } from '../../piece';
 import { Position } from '../../position';
-import { Game } from './game.model';
+import { Game } from './game';
 
 export interface IGameService {
   getGame(): Promise<Game>;

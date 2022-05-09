@@ -1,1 +1,1 @@
-export * from './position.model';
+export * from './position';

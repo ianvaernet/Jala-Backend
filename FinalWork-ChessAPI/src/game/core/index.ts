@@ -1,4 +1,4 @@
-export * from './game.model';
+export * from './game';
 export * from './game.repository';
 export * from './game.service';
 export * from './gameNotStarted.exception';
