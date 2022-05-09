@@ -1,5 +1,4 @@
 import { BoardMapper } from '../../board';
-import { Piece, PieceMapper } from '../../piece';
 import { GameDTO } from '../API';
 import { Game } from '../core';
 import { GameEntity } from './game.entity';

@@ -14,7 +14,7 @@ export class GameRepository implements IGameRepository {
   }
 
   async getGame() {
-    const gameEntity = await this.repo.find();
+    const gameEntity = await this.repo.find({ relations: ['pieces'] });
     return gameEntity[0] ? GameMapper.toDomain(gameEntity[0]) : null;
   }
 

@@ -1,14 +1,44 @@
 import { Game } from '../../game';
-import { Piece } from '../../piece';
-import { Position } from '../../position';
+import { Bishop, Color, King, Knight, Pawn, Piece, Queen, Rook } from '../../piece';
+import { File, FileNumber, Position, Rank } from '../../position';
 import { PieceNotFoundException } from './pieceNotFound.exception';
 
 export class Board {
+  private grid: Position[];
   private game: Game;
-  constructor(private grid: Position[]) {
-    grid.forEach((position) => {
-      if (position.getOccupiedBy()) position.getOccupiedBy().setBoard(this);
+  constructor(pieces: Piece[]) {
+    const grid: Position[] = [];
+    for (let rank: Rank = 1; rank < 9; rank++) {
+      for (let file: FileNumber = 0; file < 8; file++) {
+        grid.push(new Position(file as FileNumber, rank as Rank));
+      }
+    }
+    pieces.forEach((piece) => {
+      piece.setBoard(this);
+      grid[(piece.getPosition().getRank() - 1) * 8 + piece.getPosition().getFileAsNumber()].setOccupiedBy(piece);
     });
+    this.grid = grid;
+  }
+
+  static initiateBoard() {
+    const pieces: Piece[] = [];
+    const colors: Color[] = ['White', 'Black'];
+    const colorRanks = { White: [1, 2] as Rank[], Black: [8, 7] as Rank[] };
+    const files = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] as File[];
+    colors.forEach((color) => {
+      pieces.push(new Rook(color, new Position('A', colorRanks[color][0])));
+      pieces.push(new Knight(color, new Position('B', colorRanks[color][0])));
+      pieces.push(new Bishop(color, new Position('C', colorRanks[color][0])));
+      pieces.push(new Queen(color, new Position('D', colorRanks[color][0])));
+      pieces.push(new King(color, new Position('E', colorRanks[color][0])));
+      pieces.push(new Bishop(color, new Position('F', colorRanks[color][0])));
+      pieces.push(new Knight(color, new Position('G', colorRanks[color][0])));
+      pieces.push(new Rook(color, new Position('H', colorRanks[color][0])));
+      files.forEach((file) => {
+        pieces.push(new Pawn(color, new Position(file, colorRanks[color][1])));
+      });
+    });
+    return new Board(pieces);
   }
 
   getGrid(): Position[] {

@@ -7,7 +7,7 @@ const CHAR_CODE_FOR_A = 65;
 
 export class Position {
   private file: File;
-  private occupiedBy: Piece;
+  private occupiedBy: Piece | null;
 
   constructor(file: File | FileNumber, private rank: Rank) {
     if (typeof file === 'number') {
@@ -33,7 +33,7 @@ export class Position {
     return this.occupiedBy;
   }
 
-  setOccupiedBy(piece: Piece) {
+  setOccupiedBy(piece: Piece | null) {
     this.occupiedBy = piece;
   }
 

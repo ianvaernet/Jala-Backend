@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { IBoardService } from '../../board';
-import { Game, GameNotStartedException, GameStatus, IGameRepository, IGameService } from '../core';
+import { Game, GameNotStartedException, IGameRepository, IGameService } from '../core';
 import { DI } from '../../types';
 import { Position } from '../../position';
 import { Color } from '../../piece';
@@ -19,11 +19,9 @@ export class GameService implements IGameService {
   async startNewGame(): Promise<Game> {
     const currentGame = await this.gameRepository.getGame();
     if (currentGame) await this.gameRepository.delete(currentGame);
-    const board = this.boardService.initiateBoard();
-    const game = new Game(board, GameStatus.Ready, 'White');
+    const game = Game.startNewGame();
     await this.gameRepository.save(game);
-    board.setGame(game);
-    await this.boardService.saveBoard(board);
+    await this.boardService.saveBoard(game.getBoard());
     return game;
   }
 
@@ -31,6 +29,7 @@ export class GameService implements IGameService {
     const game = await this.getGame();
     game.move(color, from, to);
     await this.gameRepository.save(game);
+    await this.boardService.saveBoard(game.getBoard());
     return game;
   }
 }

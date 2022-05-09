@@ -1,6 +1,6 @@
 import { Board } from '../core';
 import { PieceMapper } from '../../piece';
-import { FileNumber, Position, PositionResponseDTO, PositionMapper, Rank } from '../../position';
+import { PositionResponseDTO, PositionMapper } from '../../position';
 import { GameEntity } from '../../game';
 
 export class BoardMapper {
@@ -9,16 +9,7 @@ export class BoardMapper {
   }
 
   static toDomain(gameEntity: GameEntity): Board {
-    const grid: Position[] = [];
-    for (let file: FileNumber = 0; file < 8; file++) {
-      for (let rank: Rank = 1; rank < 9; rank++) {
-        grid.push(new Position(file as FileNumber, rank as Rank));
-      }
-    }
-    gameEntity.pieces?.forEach((pieceEntity) => {
-      const piece = PieceMapper.toDomain(pieceEntity);
-      grid[piece.getPosition().getFileAsNumber() * 8 + piece.getPosition().getRank() - 1].setOccupiedBy(piece);
-    });
-    return new Board(grid);
+    const pieces = gameEntity.pieces?.map((pieceEntity) => PieceMapper.toDomain(pieceEntity));
+    return new Board(pieces);
   }
 }

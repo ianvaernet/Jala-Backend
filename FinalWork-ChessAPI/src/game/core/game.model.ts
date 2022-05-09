@@ -14,11 +14,13 @@ export enum GameStatus {
 export class Game {
   private id: number;
 
-  constructor(private board: Board, private status: GameStatus, private turn: Color) {}
+  constructor(private board: Board, private status: GameStatus, private turn: Color) {
+    board.setGame(this);
+  }
 
-  // static startNewGame() {
-  //   return new Game(new Board(), GameStatus.Ready, 'White');
-  // }
+  static startNewGame() {
+    return new Game(Board.initiateBoard(), GameStatus.Ready, 'White');
+  }
 
   getId() {
     return this.id;
