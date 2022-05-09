@@ -3,10 +3,10 @@ import { Position } from '../../position';
 
 export class King extends Piece {
   canMove(position: Position): boolean {
-    if (position.getFile() === this.position.getFile() && position.getRank() === this.position.getRank()) return false;
-    return (
+    const differentPosition = super.canMove(position);
+    const kingMovement =
       Math.abs(this.position.getRank() - position.getRank()) <= 1 &&
-      Math.abs(this.position.getFile().charCodeAt(0) - position.getFile().charCodeAt(0)) <= 1
-    );
+      Math.abs(this.position.getFile().charCodeAt(0) - position.getFile().charCodeAt(0)) <= 1;
+    return differentPosition && kingMovement;
   }
 }
