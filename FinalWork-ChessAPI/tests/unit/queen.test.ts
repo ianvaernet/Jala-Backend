@@ -1,7 +1,7 @@
 import { Position } from '../../src/position';
 import { Queen } from '../../src/piece';
 
-describe('Test king movement', () => {
+describe('Test queen movement', () => {
   let queen: Queen;
   beforeEach(() => {
     queen = new Queen('White', new Position('D', 1));
