@@ -7,7 +7,7 @@ export const mySQLDataSource = new DataSource({
   port: parseInt(process.env.DB_PORT || '3306'),
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  database: process.env.NODE_ENV !== 'test' ? process.env.DB_NAME : process.env.DB_NAME + '_test',
   entities: ['dist/**/*.entity.js'],
   synchronize: true,
   migrationsRun: false,
