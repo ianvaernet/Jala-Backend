@@ -40,4 +40,8 @@ export class Position {
   isEmpty() {
     return this.occupiedBy === null;
   }
+
+  equals(position: Position) {
+    return this.file === position.getFile() && this.rank === position.getRank();
+  }
 }

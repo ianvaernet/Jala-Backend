@@ -1,4 +1,5 @@
 import { BoardMapper } from '../../board';
+import { Piece, PieceMapper } from '../../piece';
 import { GameDTO } from '../API';
 import { Game } from '../core';
 import { GameEntity } from './game.entity';
@@ -10,7 +11,7 @@ export class GameMapper {
 
   static toDomain(gameEntity: GameEntity) {
     const board = BoardMapper.toDomain(gameEntity);
-    const game = new Game(gameEntity.status, board, gameEntity.turn);
+    const game = new Game(board, gameEntity.status, gameEntity.turn);
     game.setId(gameEntity.id);
     return game;
   }
@@ -23,7 +24,7 @@ export class GameMapper {
     // gameEntity.pieces = game
     //   .getBoard()
     //   .getGrid()
-    //   .filter((position) => position.getOccupiedBy() !== null)
+    //   .filter((position) => position.getOccupiedBy())
     //   .map((position) => PieceMapper.toPersistence(position.getOccupiedBy() as Piece));
     return gameEntity;
   }

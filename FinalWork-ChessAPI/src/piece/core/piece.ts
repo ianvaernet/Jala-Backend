@@ -1,5 +1,6 @@
 import { Board } from '../../board';
 import { Position } from '../../position';
+import { InvalidMoveException } from './invalidMove.exception';
 
 export type Color = 'Black' | 'White';
 
@@ -8,11 +9,16 @@ export abstract class Piece {
   private board: Board;
   constructor(private readonly color: Color, protected position: Position) {}
 
-  moveTo(position: Position) {
-    this.position = position;
+  canMove(position: Position): boolean {
+    const samePosition = position.getFile() === this.position.getFile() && position.getRank() === this.position.getRank();
+    return !samePosition;
   }
 
-  abstract canMove(position: Position): boolean;
+  moveTo(position: Position) {
+    if (!this.canMove(position)) throw new InvalidMoveException();
+    this.position = position;
+    this.position.setOccupiedBy(this);
+  }
 
   getColor(): Color {
     return this.color;

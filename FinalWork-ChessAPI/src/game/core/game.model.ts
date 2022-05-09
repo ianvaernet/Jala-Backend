@@ -1,6 +1,9 @@
 import { Board } from '../../board';
-import { Color, Piece } from '../../piece';
+import { Color } from '../../piece';
 import { Position } from '../../position';
+import { GameOverException } from './gameOver.exception';
+import { NotYourPieceException } from './notYourPiece.exception';
+import { NotYourTurnException } from './notYourTurn.exception';
 
 export enum GameStatus {
   Ready = 'Ready to Start',
@@ -10,11 +13,12 @@ export enum GameStatus {
 
 export class Game {
   private id: number;
-  // private status: GameStatus;
-  // private board: Board;
-  // private turn: Color;
 
-  constructor(private status: GameStatus, private board: Board, private turn: Color) {}
+  constructor(private board: Board, private status: GameStatus, private turn: Color) {}
+
+  // static startNewGame() {
+  //   return new Game(new Board(), GameStatus.Ready, 'White');
+  // }
 
   getId() {
     return this.id;
@@ -26,6 +30,9 @@ export class Game {
   getStatus() {
     return this.status;
   }
+  private setStatus(status: GameStatus) {
+    this.status = status;
+  }
 
   getBoard() {
     return this.board;
@@ -35,8 +42,14 @@ export class Game {
     return this.turn;
   }
 
-  makeMove(piece: Piece, position: Position): void {
-    1 + 2;
+  move(color: Color, from: Position, to: Position): void {
+    if (this.status === GameStatus.Checkmate) throw new GameOverException();
+    if (this.status === GameStatus.Ready) this.setStatus(GameStatus.Playing);
+    if (this.turn !== color) throw new NotYourTurnException();
+    if (this.board.getPieceInPosition(from).getColor() !== color) throw new NotYourPieceException();
+    this.board.move(from, to);
+    this.turn = this.turn === 'White' ? 'Black' : 'White';
+    this.checkVictoryCondition();
   }
 
   checkVictoryCondition(): void {

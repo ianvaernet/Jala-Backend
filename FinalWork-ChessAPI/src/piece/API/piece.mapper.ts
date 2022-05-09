@@ -1,4 +1,4 @@
-import { GameMapper } from '../../game';
+import { GameEntity, GameMapper } from '../../game';
 import { PositionMapper } from '../../position';
 import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from '../core';
 import { PieceEntity, PieceType } from '../infrastructure';
@@ -11,12 +11,12 @@ export class PieceMapper {
 
   public static toDomain(pieceEntity: PieceEntity): Piece {
     const pieceTypes = {
-      King: King,
-      Queen: Queen,
-      Pawn: Pawn,
-      Bishop: Bishop,
-      Knight: Knight,
-      Rook: Rook,
+      King,
+      Queen,
+      Pawn,
+      Bishop,
+      Knight,
+      Rook,
     };
     return new pieceTypes[pieceEntity.type](pieceEntity.color, PositionMapper.toDomain(pieceEntity.position));
   }
@@ -24,7 +24,12 @@ export class PieceMapper {
   public static toPersistence(piece: Piece): PieceEntity {
     const pieceEntity = new PieceEntity();
     if (piece.getId()) pieceEntity.id = piece.getId();
-    pieceEntity.game = GameMapper.toPersistence(piece.getBoard().getGame());
+    if (piece.getBoard().getGame()) {
+      const game = new GameEntity();
+      game.id = piece.getBoard().getGame().getId();
+      pieceEntity.game = game;
+    }
+    // pieceEntity.game = GameMapper.toPersistence(piece.getBoard().getGame());
     const position = piece.getPosition();
     pieceEntity.position = { file: position.getFile(), rank: position.getRank() };
     pieceEntity.color = piece.getColor();

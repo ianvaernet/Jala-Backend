@@ -13,6 +13,6 @@ export class GameEntity {
   @Column()
   turn: Color;
 
-  @OneToMany(() => PieceEntity, (piece) => piece.game, { eager: true })
+  @OneToMany(() => PieceEntity, (piece) => piece.game, { eager: true, cascade: true })
   pieces: PieceEntity[];
 }

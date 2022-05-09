@@ -1,5 +1,5 @@
-import { PositionDTO } from '../../position';
+import { PositionResponseDTO } from '../../position';
 
 export class BoardDTO {
-  grid: PositionDTO[];
+  grid: PositionResponseDTO[];
 }

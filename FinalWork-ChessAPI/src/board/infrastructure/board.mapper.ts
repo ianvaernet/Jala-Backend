@@ -1,10 +1,10 @@
 import { Board } from '../core';
 import { PieceMapper } from '../../piece';
-import { FileNumber, Position, PositionDTO, PositionMapper, Rank } from '../../position';
+import { FileNumber, Position, PositionResponseDTO, PositionMapper, Rank } from '../../position';
 import { GameEntity } from '../../game';
 
 export class BoardMapper {
-  static toDTO(board: Board): PositionDTO[] {
+  static toDTO(board: Board): PositionResponseDTO[] {
     return board.getGrid().map((position) => PositionMapper.toDTO(position));
   }
 

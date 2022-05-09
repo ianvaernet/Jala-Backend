@@ -3,6 +3,8 @@ import { DIContainer } from '../../inversify.config';
 import { IGameService } from '../core';
 import { GameMapper } from '../infrastructure';
 import { DI } from '../../types';
+import { MoveDTO } from './move.dto';
+import { PositionMapper } from '../../position';
 
 const gameService = DIContainer.get<IGameService>(DI.IGameService);
 const router = express.Router();
@@ -42,7 +44,7 @@ router.get('/', async function (req, res, next) {
  *   /game:
  *     post:
  *       tags: ["Game"]
- *       summary: Starts a new game
+ *       summary: Start a new game
  *       responses:
  *         200:
  *           description: Game started
@@ -59,6 +61,44 @@ router.get('/', async function (req, res, next) {
 router.post('/', async (req: Request, res, next) => {
   try {
     const game = await gameService.startNewGame();
+    res.status(201).json({ data: GameMapper.toDTO(game) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * @openapi
+ *   /game/move:
+ *     post:
+ *       tags: ["Game"]
+ *       summary: Move a piece
+ *       requestBody:
+ *         content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Movement'
+ *       responses:
+ *         200:
+ *           description: Piece moved
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 allOf:
+ *                   - $ref: '#/components/schemas/ApiResponse'
+ *                   - type: object
+ *                     properties:
+ *                       data:
+ *                         $ref: '#/components/schemas/Game'
+ *         400:
+ *           description: Invalid move | Not your turn | Game is over
+ *         404:
+ *           description: Game not started
+ */
+router.post('/move', async (req: Request, res, next) => {
+  try {
+    const { color, from, to }: MoveDTO = req.body;
+    const game = await gameService.move(color, PositionMapper.toDomain(from), PositionMapper.toDomain(to));
     res.status(201).json({ data: GameMapper.toDTO(game) });
   } catch (err) {
     next(err);
@@ -85,6 +125,25 @@ router.post('/', async (req: Request, res, next) => {
  *          type: string
  *         turn:
  *          type: string
+ *     Position:
+ *       type: object
+ *       properties:
+ *         file:
+ *           type: string
+ *           enum: ["A", "B", "C", "D", "E", "F", "G", "H"]
+ *         rank:
+ *           type: integer
+ *           enum: [1, 2, 3, 4, 5, 6, 7, 8]
+ *     Movement:
+ *       type: object
+ *       properties:
+ *         color:
+ *           type: string
+ *           enum: ["White", "Black"]
+ *         from:
+ *           $ref: '#/components/schemas/Position'
+ *         to:
+ *           $ref: '#/components/schemas/Position'
  */
 
 export default router;

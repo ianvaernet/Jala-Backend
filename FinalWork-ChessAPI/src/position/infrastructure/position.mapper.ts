@@ -1,10 +1,10 @@
 import { PieceMapper } from '../../piece';
 import { File, Position, Rank } from '../core';
-import { PositionDTO } from '../API/position.dto';
+import { PositionResponseDTO } from '../API/positionResponse.dto';
 
 export class PositionMapper {
-  static toDTO(position: Position): PositionDTO {
-    const positionDTO = new PositionDTO();
+  static toDTO(position: Position): PositionResponseDTO {
+    const positionDTO = new PositionResponseDTO();
     positionDTO.file = position.getFile();
     positionDTO.rank = position.getRank();
     const occupiedBy = position.getOccupiedBy();
