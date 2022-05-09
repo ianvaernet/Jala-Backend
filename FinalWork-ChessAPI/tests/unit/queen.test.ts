@@ -6,6 +6,9 @@ describe('Test king movement', () => {
   beforeEach(() => {
     queen = new Queen('White', new Position('D', 1));
   });
+  afterAll(async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error
+  });
 
   it('Should move vertically', () => {
     const position = new Position('D', 8);

@@ -6,6 +6,9 @@ describe('Test king movement', () => {
   beforeEach(() => {
     king = new King('White', new Position('E', 2));
   });
+  afterAll(async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error
+  });
 
   it('Should move one step forward', () => {
     expect(king.canMove(new Position('E', 3))).toBe(true);
