@@ -1,6 +1,7 @@
 import { Board } from '../../board';
-import { Color } from '../../piece';
+import { Color, King } from '../../piece';
 import { Position } from '../../position';
+import { CheckmateMoveException } from './checkmateMoveException';
 import { GameOverException } from './gameOver.exception';
 import { NotYourPieceException } from './notYourPiece.exception';
 import { NotYourTurnException } from './notYourTurn.exception';
@@ -50,11 +51,24 @@ export class Game {
     if (this.turn !== color) throw new NotYourTurnException();
     if (this.board.getPieceInPosition(from).getColor() !== color) throw new NotYourPieceException();
     this.board.move(from, to);
+    if (this.isCheckTo(this.turn)) throw new CheckmateMoveException();
     this.turn = this.turn === 'White' ? 'Black' : 'White';
-    this.checkVictoryCondition();
+    if (this.isCheckMate()) this.setStatus(GameStatus.Checkmate);
   }
 
-  checkVictoryCondition(): void {
-    1 + 2;
+  isCheckTo(color: Color): boolean {
+    let isCheck = false;
+    const allPieces = this.board.getPieces();
+    const king = allPieces.find((piece) => piece.getColor() === color && piece.constructor.name === 'King') as King;
+    const opponentPieces = allPieces.filter((piece) => piece.getColor() !== color);
+    opponentPieces.forEach((opponentPiece) => {
+      if (opponentPiece.canMove(king.getPosition())) isCheck = true;
+    });
+    return isCheck;
+  }
+
+  isCheckMate(): boolean {
+    const isThereAnyMove = false;
+    return this.isCheckTo(this.turn) && !isThereAnyMove;
   }
 }

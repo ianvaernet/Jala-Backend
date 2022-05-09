@@ -52,6 +52,12 @@ export class Board {
     this.game = game;
   }
 
+  getPieces(): Piece[] {
+    return this.grid
+      .filter((gridPosition) => gridPosition.getOccupiedBy())
+      .map((gridPosition) => gridPosition.getOccupiedBy() as Piece);
+  }
+
   getPieceInPosition(position: Position): Piece {
     const piece = this.grid.find((gridPosition) => gridPosition.equals(position))?.getOccupiedBy();
     if (!piece) throw new PieceNotFoundException();
