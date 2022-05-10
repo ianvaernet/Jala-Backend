@@ -1,10 +1,11 @@
-import express from 'express';
+import { FileSaver } from "./fileSaver";
+import { Invoice } from "./invoice";
+import { InvoiceExporter } from "./invoiceExporter";
+import { Printer } from "./printer";
 
-const app = express();
-const port = 3000;
+const invoice = new Invoice();
+const invoiceExporter = new InvoiceExporter(invoice);
 
-app.get('/', (request, response) => {
-    response.send('Hello World!');
-});
+FileSaver.save(invoiceExporter.toPDF(), 'invoice.pdf');
+Printer.print(invoiceExporter, 'A4');
 
-app.listen(port, ()=> console.log(`server listening on ${port}`));

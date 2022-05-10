@@ -1,7 +1,7 @@
 import { PDFExportable } from './PDFexportable';
 import { SVGExportable } from './SVGExportable';
 
-export class InvoiceExportable implements PDFExportable, SVGExportable {
+export class InvoiceExporter implements PDFExportable, SVGExportable {
   constructor(public invoice: Invoice) {}
 
   toPDF() {
