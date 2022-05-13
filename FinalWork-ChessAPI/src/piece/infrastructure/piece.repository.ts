@@ -18,7 +18,7 @@ export class PieceRepository implements IPieceRepository {
     return pieces.map((piece) => PieceMapper.toDomain(piece));
   }
 
-  async deletePieceById(id: string) {
+  async deletePieceById(id: number) {
     const result = await this.repo.delete(id);
     return result.affected ? true : false;
   }

@@ -41,7 +41,7 @@ export class Position {
     return this.occupiedBy === null;
   }
 
-  equals(position: Position) {
-    return this.file === position.getFile() && this.rank === position.getRank();
+  equals(other: Position) {
+    return this.file === other.getFile() && this.rank === other.getRank();
   }
 }

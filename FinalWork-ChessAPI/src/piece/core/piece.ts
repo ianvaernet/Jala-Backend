@@ -41,4 +41,8 @@ export abstract class Piece {
   setBoard(board: Board) {
     this.board = board;
   }
+
+  equals(other: Piece): boolean {
+    return this.id === other.id && this.color === other.color && this.position.equals(other.position);
+  }
 }

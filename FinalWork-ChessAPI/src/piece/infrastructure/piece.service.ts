@@ -6,7 +6,15 @@ import { IPieceRepository, IPieceService, Piece } from '../core';
 export class PieceService implements IPieceService {
   @inject(DI.IPieceRepository) private pieceRepository: IPieceRepository;
 
-  async savePiece(piece: Piece) {
-    await this.pieceRepository.save(piece);
+  getRemainingPieces(): Promise<Piece[]> {
+    return this.pieceRepository.getRemainingPieces();
+  }
+
+  savePiece(piece: Piece) {
+    return this.pieceRepository.save(piece);
+  }
+
+  deletePieceById(id: number) {
+    return this.pieceRepository.deletePieceById(id);
   }
 }
