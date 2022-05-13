@@ -7,6 +7,9 @@ export class Knight extends Piece {
     const lateralSteps = Math.abs(this.position.getFileAsNumber() - position.getFileAsNumber());
     const verticalSteps = Math.abs(this.position.getRank() - position.getRank());
     const knightMovement = (lateralSteps === 2 && verticalSteps === 1) || (lateralSteps === 1 && verticalSteps === 2);
-    return differentPosition && knightMovement;
+
+    const pieceInDestination = this.getBoard().getPieceInPosition(position);
+    
+    return differentPosition && knightMovement && (!pieceInDestination || pieceInDestination.getColor() !== this.getColor());
   }
 }
