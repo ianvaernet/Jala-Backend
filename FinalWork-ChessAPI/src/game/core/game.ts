@@ -1,4 +1,4 @@
-import { Board } from '../../board';
+import { Board, PieceNotFoundException } from '../../board';
 import { Color, King } from '../../piece';
 import { Position } from '../../position';
 import { CheckmateMoveException } from './checkmateMoveException';
@@ -49,7 +49,9 @@ export class Game {
     if (this.status === GameStatus.Checkmate) throw new GameOverException();
     if (this.status === GameStatus.Ready) this.setStatus(GameStatus.Playing);
     if (this.turn !== color) throw new NotYourTurnException();
-    if (this.board.getPieceInPosition(from).getColor() !== color) throw new NotYourPieceException();
+    const piece = this.board.getPieceInPosition(from);
+    if (!piece) throw new PieceNotFoundException();
+    if (piece.getColor() !== color) throw new NotYourPieceException();
     this.board.move(from, to);
     if (this.isCheckTo(this.turn)) throw new CheckmateMoveException();
     this.turn = this.turn === 'White' ? 'Black' : 'White';

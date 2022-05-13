@@ -58,14 +58,14 @@ export class Board {
       .map((gridPosition) => gridPosition.getOccupiedBy() as Piece);
   }
 
-  getPieceInPosition(position: Position): Piece {
+  getPieceInPosition(position: Position): Piece | null {
     const piece = this.grid.find((gridPosition) => gridPosition.equals(position))?.getOccupiedBy();
-    if (!piece) throw new PieceNotFoundException();
-    return piece;
+    return piece ?? null;
   }
 
   move(from: Position, to: Position): void {
     const piece = this.getPieceInPosition(from);
+    if (!piece) throw new PieceNotFoundException();
     piece.moveTo(to);
   }
 }
