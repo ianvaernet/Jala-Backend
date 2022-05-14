@@ -1,3 +1,4 @@
+import { Board } from '../../src/board';
 import { King } from '../../src/piece';
 import { Position } from '../../src/position';
 
@@ -5,6 +6,7 @@ describe('Test king movement', () => {
   let king: King;
   beforeEach(() => {
     king = new King('White', new Position('E', 2));
+    king.setBoard(new Board([king]));
   });
   afterAll(async () => {
     await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error

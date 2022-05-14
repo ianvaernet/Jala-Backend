@@ -1,10 +1,12 @@
 import { Position } from '../../src/position';
 import { Queen } from '../../src/piece';
+import { Board } from '../../src/board';
 
 describe('Test queen movement', () => {
   let queen: Queen;
   beforeEach(() => {
     queen = new Queen('White', new Position('D', 1));
+    queen.setBoard(new Board([queen]));
   });
   afterAll(async () => {
     await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error

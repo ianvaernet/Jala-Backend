@@ -1,3 +1,4 @@
+import { Board } from '../../src/board';
 import { Pawn } from '../../src/piece';
 import { Position } from '../../src/position';
 
@@ -6,7 +7,9 @@ describe('Test pawn movement', () => {
   let pawnOnInitialPosition: Pawn;
   beforeEach(() => {
     pawn = new Pawn('White', new Position('B', 4));
+    pawn.setBoard(new Board([pawn]));
     pawnOnInitialPosition = new Pawn('White', new Position('A', 2));
+    pawnOnInitialPosition.setBoard(new Board([pawnOnInitialPosition]));
   });
   afterAll(async () => {
     await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error
