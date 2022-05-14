@@ -15,7 +15,7 @@ export class Board {
     }
     pieces.forEach((piece) => {
       piece.setBoard(this);
-      grid[(piece.getPosition().getRank() - 1) * 8 + piece.getPosition().getFileAsNumber()].setOccupiedBy(piece);
+      grid[(piece.getPosition().getRank() - 1) * 8 + piece.getPosition().getFileAsNumber()] = piece.getPosition();
     });
     this.grid = grid;
   }
@@ -58,14 +58,18 @@ export class Board {
       .map((gridPosition) => gridPosition.getOccupiedBy() as Piece);
   }
 
+  getGridPosition(position: Position) {
+    return this.grid.find((gridPosition) => gridPosition.equals(position)) as Position;
+  }
+
   getPieceInPosition(position: Position): Piece | null {
-    const piece = this.grid.find((gridPosition) => gridPosition.equals(position))?.getOccupiedBy();
+    const piece = this.getGridPosition(position)?.getOccupiedBy();
     return piece ?? null;
   }
 
   move(from: Position, to: Position): void {
     const piece = this.getPieceInPosition(from);
     if (!piece) throw new PieceNotFoundException();
-    piece.moveTo(to);
+    piece.moveTo(this.getGridPosition(to));
   }
 }

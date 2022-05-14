@@ -1,7 +1,7 @@
 import { Board, PieceNotFoundException } from '../../board';
 import { Color, King } from '../../piece';
 import { Position } from '../../position';
-import { CheckmateMoveException } from './checkmateMoveException';
+import { CheckmateMoveException } from './checkmateMove.exception';
 import { GameOverException } from './gameOver.exception';
 import { NotYourPieceException } from './notYourPiece.exception';
 import { NotYourTurnException } from './notYourTurn.exception';
@@ -44,6 +44,9 @@ export class Game {
   getTurn() {
     return this.turn;
   }
+  passTurn() {
+    this.turn = this.turn === 'White' ? 'Black' : 'White';
+  }
 
   move(color: Color, from: Position, to: Position): void {
     if (this.status === GameStatus.Checkmate) throw new GameOverException();
@@ -54,7 +57,7 @@ export class Game {
     if (piece.getColor() !== color) throw new NotYourPieceException();
     this.board.move(from, to);
     if (this.isCheckTo(this.turn)) throw new CheckmateMoveException();
-    this.turn = this.turn === 'White' ? 'Black' : 'White';
+    this.passTurn();
     if (this.isCheckMate()) this.setStatus(GameStatus.Checkmate);
   }
 
@@ -70,7 +73,9 @@ export class Game {
   }
 
   isCheckMate(): boolean {
-    const isThereAnyMove = false;
-    return this.isCheckTo(this.turn) && !isThereAnyMove;
+    const kingCanMoveOutOfCheck = true;
+    const kingCanBeCovered = false;
+    const threathingPieceCanBeCaptured = false;
+    return this.isCheckTo(this.turn) && !kingCanMoveOutOfCheck && !kingCanBeCovered && !threathingPieceCanBeCaptured;
   }
 }

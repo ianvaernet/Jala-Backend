@@ -30,6 +30,6 @@ export class GameService implements IGameService {
     game.move(color, from, to);
     await this.gameRepository.save(game);
     await this.boardService.saveBoard(game.getBoard());
-    return await this.getGame();
+    return game;
   }
 }
