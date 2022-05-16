@@ -55,4 +55,11 @@ describe('Test check is handled properly', () => {
     game.move('White', new Position('F', 1), new Position('B', 5));
     game.move('Black', new Position('D', 8), new Position('D', 7));
   });
+
+  it('Should not allow to move the king to a position threatened by a knight', () => {
+    game.move('White', new Position('G', 1), new Position('F', 3));
+    game.move('Black', new Position('F', 7), new Position('F', 5));
+    game.move('White', new Position('F', 3), new Position('G', 5));
+    expect(() => game.move('Black', new Position('E', 8), new Position('F', 7))).toThrow(CheckmateMoveException);
+  });
 });
