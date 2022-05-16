@@ -1,5 +1,5 @@
 import { Position } from '../../src/position';
-import { Bishop } from '../../src/piece';
+import { Bishop, Pawn } from '../../src/piece';
 import { Board } from '../../src/board';
 
 describe('Test bishop movement', () => {
@@ -44,5 +44,35 @@ describe('Test bishop movement', () => {
     expect(bishop.canMove(position)).toBe(false);
     position = new Position('C', 4);
     expect(bishop.canMove(position)).toBe(false);
+  });
+});
+
+describe('Test bishop collisions', () => {
+  let bishop: Bishop;
+  let board: Board;
+  beforeEach(() => {
+    bishop = new Bishop('White', new Position('C', 1));
+    const whitePawn = new Pawn('White', new Position('A', 3));
+    const blackPawn = new Pawn('Black', new Position('E', 3));
+    board = new Board([bishop, whitePawn, blackPawn]);
+    bishop.setBoard(board);
+  });
+  afterAll(async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error
+  });
+
+  it('Should not move when there is a piece before the destination', () => {
+    const position = new Position('F', 4);
+    expect(bishop.canMove(position)).toBe(false);
+  });
+
+  it('Should not move when there is an own piece in the destination', () => {
+    const position = new Position('A', 3);
+    expect(bishop.canMove(position)).toBe(false);
+  });
+
+  it('Should capture when there is an opponent piece in the destination', () => {
+    const position = new Position('E', 3);
+    expect(bishop.canMove(position)).toBe(true);
   });
 });

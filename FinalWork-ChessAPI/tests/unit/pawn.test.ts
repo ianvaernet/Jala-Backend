@@ -39,3 +39,33 @@ describe('Test pawn movement', () => {
     expect(pawn.canMove(new Position('B', 3))).toBe(false);
   });
 });
+
+describe('Test pawn collisions', () => {
+  let pawn: Pawn;
+  let board: Board;
+  beforeEach(() => {
+    pawn = new Pawn('White', new Position('E', 2));
+    const whitePawn = new Pawn('White', new Position('E', 3));
+    const blackPawn = new Pawn('Black', new Position('F', 3));
+    board = new Board([pawn, whitePawn, blackPawn]);
+    pawn.setBoard(board);
+  });
+  afterAll(async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error
+  });
+
+  it('Should not move when there is a piece before the destination', () => {
+    const position = new Position('E', 4);
+    expect(pawn.canMove(position)).toBe(false);
+  });
+
+  it('Should not move when there is a piece forward', () => {
+    const position = new Position('E', 3);
+    expect(pawn.canMove(position)).toBe(false);
+  });
+
+  it('Should capture when there is an opponent piece in diagonal', () => {
+    const position = new Position('F', 3);
+    expect(pawn.canMove(position)).toBe(true);
+  });
+});

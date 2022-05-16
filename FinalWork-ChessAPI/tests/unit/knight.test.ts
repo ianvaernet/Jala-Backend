@@ -1,5 +1,5 @@
 import { Board } from '../../src/board';
-import { Knight } from '../../src/piece';
+import { Knight, Pawn } from '../../src/piece';
 import { Position } from '../../src/position';
 
 describe('Test knight movement', () => {
@@ -50,5 +50,30 @@ describe('Test knight movement', () => {
 
   it('Should not move one step in diagonal', () => {
     expect(knight.canMove(new Position('E', 5))).toBe(false);
+  });
+});
+
+describe('Test knight collisions', () => {
+  let knight: Knight;
+  let board: Board;
+  beforeEach(() => {
+    knight = new Knight('White', new Position('B', 1));
+    const whitePawn = new Pawn('White', new Position('A', 3));
+    const blackPawn = new Pawn('Black', new Position('D', 2));
+    board = new Board([knight, whitePawn, blackPawn]);
+    knight.setBoard(board);
+  });
+  afterAll(async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error
+  });
+
+  it('Should not move when there is an own piece in the destination', () => {
+    const position = new Position('A', 3);
+    expect(knight.canMove(position)).toBe(false);
+  });
+
+  it('Should capture when there is an opponent piece in the destination', () => {
+    const position = new Position('D', 2);
+    expect(knight.canMove(position)).toBe(true);
   });
 });
