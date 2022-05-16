@@ -99,7 +99,7 @@ router.post('/move', async (req: Request, res, next) => {
   try {
     const { color, from, to }: MoveDTO = req.body;
     const game = await gameService.move(color, PositionMapper.toDomain(from), PositionMapper.toDomain(to));
-    res.status(201).json({ data: GameMapper.toDTO(game) });
+    res.status(200).json({ data: GameMapper.toDTO(game) });
   } catch (err) {
     next(err);
   }
