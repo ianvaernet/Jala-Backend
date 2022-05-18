@@ -44,7 +44,7 @@ export class Game {
   getTurn() {
     return this.turn;
   }
-  passTurn() {
+  private passTurn() {
     this.turn = this.turn === 'White' ? 'Black' : 'White';
   }
 
@@ -61,21 +61,56 @@ export class Game {
     if (this.isCheckMate()) this.setStatus(GameStatus.Checkmate);
   }
 
-  isCheckTo(color: Color): boolean {
-    let isCheck = false;
-    const allPieces = this.board.getPieces();
-    const king = allPieces.find((piece) => piece.getColor() === color && piece.constructor.name === 'King') as King;
-    const opponentPieces = allPieces.filter((piece) => piece.getColor() !== color);
-    opponentPieces.forEach((opponentPiece) => {
-      if (opponentPiece.canMove(king.getPosition())) isCheck = true;
-    });
+  private isCheckTo(color: Color): boolean {
+    const king = this.board.getKing(color);
+    const isCheck = this.board.getThreateningPieces(king).length > 0;
     return isCheck;
   }
 
-  isCheckMate(): boolean {
-    const kingCanMoveOutOfCheck = true;
-    const kingCanBeCovered = false;
-    const threathingPieceCanBeCaptured = false;
-    return this.isCheckTo(this.turn) && !kingCanMoveOutOfCheck && !kingCanBeCovered && !threathingPieceCanBeCaptured;
+  private kingCanMoveOutOfCheck(): boolean {
+    let kingCanMoveOutOfCheck = false;
+    const king = this.board.getKing(this.turn);
+    for (let position of king.getAvailableMovements()) {
+      const originalPosition = king.getPosition();
+      this.board.move(originalPosition, position);
+      if (!this.isCheckTo(this.turn)) kingCanMoveOutOfCheck = true;
+      this.board.move(position, originalPosition);
+      if (kingCanMoveOutOfCheck) break;
+    }
+    return kingCanMoveOutOfCheck;
+  }
+
+  private threateningPieceCanBeCaptured(): boolean {
+    const king = this.board.getKing(this.turn);
+    const threateningPieces = this.board.getThreateningPieces(king);
+    if (threateningPieces.length > 1) return false;
+    if (threateningPieces.length === 0) return true;
+    const threateningPiece = threateningPieces[0];
+    for (let piece of this.board.getPieces(this.turn)) {
+      if (piece.canMove(threateningPiece.getPosition())) return true;
+    }
+    return false;
+  }
+
+  private kingCanBeCovered(): boolean {
+    const king = this.board.getKing(this.turn);
+    const pieceDoingCheck = this.board.getThreateningPieces(king)[0];
+    const positionsToCover = pieceDoingCheck.getPositionsBefore(king.getPosition());
+    const ownPieces = this.board.getPieces(this.turn).filter((piece) => !(piece instanceof King));
+    for (let ownPiece of ownPieces) {
+      for (let positionToCover of positionsToCover) {
+        if (ownPiece.canMove(positionToCover)) return true;
+      }
+    }
+    return false;
+  }
+
+  private isCheckMate(): boolean {
+    return (
+      this.isCheckTo(this.turn) &&
+      // !this.kingCanMoveOutOfCheck() &&
+      !this.threateningPieceCanBeCaptured() &&
+      !this.kingCanBeCovered()
+    );
   }
 }

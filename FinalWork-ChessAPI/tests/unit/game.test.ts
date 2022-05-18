@@ -1,15 +1,15 @@
-import { CheckmateMoveException, Game } from '../../src/game';
+import { CheckmateMoveException, Game, GameStatus } from '../../src/game';
 import { Position } from '../../src/position';
 
-describe('Test check is handled properly', () => {
-  let game: Game;
-  beforeEach(() => {
-    game = Game.startNewGame();
-  });
-  afterAll(async () => {
-    await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error
-  });
+let game: Game;
+beforeEach(() => {
+  game = Game.startNewGame();
+});
+afterAll(async () => {
+  await new Promise((resolve) => setTimeout(() => resolve(null), 500)); // avoid jest open handle error
+});
 
+describe('Test check is handled properly', () => {
   it('Should not allow to move the king into check', () => {
     game.move('White', new Position('E', 2), new Position('E', 4));
     game.move('Black', new Position('D', 7), new Position('D', 5));
@@ -46,7 +46,7 @@ describe('Test check is handled properly', () => {
     game.move('White', new Position('C', 3), new Position('D', 5));
     game.move('Black', new Position('A', 6), new Position('A', 5));
     game.move('White', new Position('D', 5), new Position('F', 6));
-    game.move('Black', new Position('F', 7), new Position('F', 6));
+    game.move('Black', new Position('E', 7), new Position('F', 6));
   });
 
   it('Should allow to move other piece to cover the king from check', () => {
@@ -61,5 +61,15 @@ describe('Test check is handled properly', () => {
     game.move('Black', new Position('F', 7), new Position('F', 5));
     game.move('White', new Position('F', 3), new Position('G', 5));
     expect(() => game.move('Black', new Position('E', 8), new Position('F', 7))).toThrow(CheckmateMoveException);
+  });
+});
+
+describe('Test checkmate is handled properly', () => {
+  it("Should do the Fool's Mate", () => {
+    game.move('White', new Position('G', 2), new Position('G', 4));
+    game.move('Black', new Position('E', 7), new Position('E', 5));
+    game.move('White', new Position('F', 2), new Position('F', 3));
+    game.move('Black', new Position('D', 8), new Position('H', 4));
+    expect(game.getStatus()).toBe(GameStatus.Checkmate);
   });
 });

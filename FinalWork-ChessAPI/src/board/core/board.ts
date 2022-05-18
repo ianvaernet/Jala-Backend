@@ -52,10 +52,23 @@ export class Board {
     this.game = game;
   }
 
-  getPieces(): Piece[] {
-    return this.grid
+  getPieces(color?: Color): Piece[] {
+    let pieces = this.grid
       .filter((gridPosition) => gridPosition.getOccupiedBy())
       .map((gridPosition) => gridPosition.getOccupiedBy() as Piece);
+    if (color) pieces = pieces.filter((piece) => piece.getColor() === color);
+    return pieces;
+  }
+  getThreateningPieces(piece: Piece): Piece[] {
+    const threateningPieces: Piece[] = [];
+    const opponentPieces = this.getPieces(piece.getColor() === 'White' ? 'Black' : 'White');
+    opponentPieces.forEach((opponentPiece) => {
+      if (opponentPiece.canMove(piece.getPosition())) threateningPieces.push(opponentPiece);
+    });
+    return threateningPieces;
+  }
+  getKing(color: Color): King {
+    return this.getPieces(color).find((piece) => piece.constructor.name === 'King') as King;
   }
 
   getGridPosition(position: Position) {

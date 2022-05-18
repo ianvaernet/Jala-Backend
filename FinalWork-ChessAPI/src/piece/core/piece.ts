@@ -54,17 +54,27 @@ export abstract class Piece {
     return movement === 0 ? 0 : movement > 0 ? 1 : -1;
   }
 
-  protected thereIsAPieceBefore(position: Position): boolean {
+  getPositionsBefore(position: Position): Position[] {
+    const positionsInMiddle: Position[] = [];
     const verticalMovement = position.getRank() - this.position.getRank();
     const verticalDifferential = this.getMovementDifferential(verticalMovement);
     const horizontalMovement = position.getFileAsNumber() - this.position.getFileAsNumber();
     const horizontalDifferential = this.getMovementDifferential(horizontalMovement);
-    const graterMovement = Math.max(Math.abs(verticalMovement), Math.abs(horizontalMovement));
-    for (let i = 1; i < graterMovement; i++) {
-      const positionInMiddle = new Position(
-        (this.position.getFileAsNumber() + i * horizontalDifferential) as FileNumber,
-        (this.position.getRank() + i * verticalDifferential) as Rank
+    const greaterMovement = Math.max(Math.abs(verticalMovement), Math.abs(horizontalMovement));
+    for (let i = 1; i < greaterMovement; i++) {
+      positionsInMiddle.push(
+        new Position(
+          (this.position.getFileAsNumber() + i * horizontalDifferential) as FileNumber,
+          (this.position.getRank() + i * verticalDifferential) as Rank
+        )
       );
+    }
+    return positionsInMiddle;
+  }
+
+  protected thereIsAPieceBefore(position: Position): boolean {
+    const positionsInMiddle = this.getPositionsBefore(position);
+    for (let positionInMiddle of positionsInMiddle) {
       if (this.getBoard().getPieceInPosition(positionInMiddle)) return true;
     }
     return false;

@@ -11,14 +11,15 @@ export class Pawn extends Piece {
     const oneStepForward = this.position.getRank() + forwardValue === position.getRank();
     const twoStepsForward = this.position.getRank() + forwardValue * 2 === position.getRank();
     const oneStepAside = Math.abs(this.position.getFileAsNumber() - position.getFileAsNumber()) === 1;
-    const isPawnMovement =
-      this.position.getFile() === position.getFile() &&
-      (oneStepForward || (isInInitialPosition && twoStepsForward && !this.thereIsAPieceBefore(position)));
-    const isPawnCaptureMovement =
-      oneStepForward &&
-      oneStepAside &&
+    const thereIsAnOpponentPieceInDestination =
       this.getBoard().getPieceInPosition(position) !== null &&
       (this.getBoard().getPieceInPosition(position) as Piece).getColor() !== this.getColor();
+
+    const isPawnMovement =
+      this.position.getFile() === position.getFile() &&
+      !thereIsAnOpponentPieceInDestination &&
+      (oneStepForward || (isInInitialPosition && twoStepsForward && !this.thereIsAPieceBefore(position)));
+    const isPawnCaptureMovement = oneStepForward && oneStepAside && thereIsAnOpponentPieceInDestination;
     return isPawnMovement || isPawnCaptureMovement;
   }
 }
