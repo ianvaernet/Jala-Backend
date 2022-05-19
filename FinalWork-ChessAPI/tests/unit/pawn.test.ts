@@ -16,27 +16,27 @@ describe('Test pawn movement', () => {
   });
 
   it('Should move two steps forward if it is on initial position', () => {
-    expect(pawnOnInitialPosition.canMove(new Position('A', 4))).toBe(true);
+    expect(pawnOnInitialPosition.canMoveTo(new Position('A', 4))).toBe(true);
   });
 
   it('Should not move two steps forward if it is on initial position', () => {
-    expect(pawn.canMove(new Position('B', 6))).toBe(false);
+    expect(pawn.canMoveTo(new Position('B', 6))).toBe(false);
   });
 
   it('Should move one step forward', () => {
-    expect(pawn.canMove(new Position('B', 5))).toBe(true);
+    expect(pawn.canMoveTo(new Position('B', 5))).toBe(true);
   });
 
   it('Should not move to a side', () => {
-    expect(pawn.canMove(new Position('C', 4))).toBe(false);
+    expect(pawn.canMoveTo(new Position('C', 4))).toBe(false);
   });
 
   it('Should not move in diagonal', () => {
-    expect(pawn.canMove(new Position('C', 5))).toBe(false);
+    expect(pawn.canMoveTo(new Position('C', 5))).toBe(false);
   });
 
   it('Should not move back', () => {
-    expect(pawn.canMove(new Position('B', 3))).toBe(false);
+    expect(pawn.canMoveTo(new Position('B', 3))).toBe(false);
   });
 });
 
@@ -56,16 +56,16 @@ describe('Test pawn collisions', () => {
 
   it('Should not move when there is a piece before the destination', () => {
     const position = new Position('E', 4);
-    expect(pawn.canMove(position)).toBe(false);
+    expect(pawn.canMoveTo(position)).toBe(false);
   });
 
   it('Should not move when there is a piece forward', () => {
     const position = new Position('E', 3);
-    expect(pawn.canMove(position)).toBe(false);
+    expect(pawn.canMoveTo(position)).toBe(false);
   });
 
   it('Should capture when there is an opponent piece in diagonal', () => {
     const position = new Position('F', 3);
-    expect(pawn.canMove(position)).toBe(true);
+    expect(pawn.canMoveTo(position)).toBe(true);
   });
 });

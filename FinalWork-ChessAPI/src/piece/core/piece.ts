@@ -11,22 +11,22 @@ export abstract class Piece {
     position.setOccupiedBy(this);
   }
 
-  canMove(position: Position): boolean {
+  canMoveTo(position: Position): boolean {
     const samePosition =
       position.getFile() === this.position.getFile() && position.getRank() === this.position.getRank();
     const pieceInDestination = this.getBoard().getPieceInPosition(position);
-    return !samePosition && (!pieceInDestination || pieceInDestination.getColor() !== this.getColor());
+    const isAnOpponentPiece = pieceInDestination?.getColor() !== this.getColor();
+    return !samePosition && (!pieceInDestination || isAnOpponentPiece);
   }
 
   canCapture(piece: Piece): boolean {
-    return this.canMove(piece.getPosition());
+    return this.canMoveTo(piece.getPosition());
   }
 
   moveTo(position: Position) {
-    if (!this.canMove(position)) throw new InvalidMoveException();
+    if (!this.canMoveTo(position)) throw new InvalidMoveException();
     this.position.setOccupiedBy(null);
-    this.position = position;
-    this.position.setOccupiedBy(this);
+    this.setPosition(position);
   }
 
   getColor(): Color {
@@ -35,6 +35,10 @@ export abstract class Piece {
 
   getPosition(): Position {
     return this.position;
+  }
+  private setPosition(position: Position) {
+    this.position = position;
+    this.position.setOccupiedBy(this);
   }
 
   getId(): number {

@@ -2,8 +2,8 @@ import { Piece } from './piece';
 import { Position } from '../../position';
 
 export class Knight extends Piece {
-  canMove(position: Position): boolean {
-    if (!super.canMove(position)) return false;
+  canMoveTo(position: Position): boolean {
+    if (!super.canMoveTo(position)) return false;
     const lateralSteps = Math.abs(this.position.getFileAsNumber() - position.getFileAsNumber());
     const verticalSteps = Math.abs(this.position.getRank() - position.getRank());
     const isKnightMovement =

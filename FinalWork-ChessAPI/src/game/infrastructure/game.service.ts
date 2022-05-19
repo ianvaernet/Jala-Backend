@@ -20,16 +20,19 @@ export class GameService implements IGameService {
     const currentGame = await this.gameRepository.getGame();
     if (currentGame) await this.gameRepository.delete(currentGame);
     const game = Game.startNewGame();
-    await this.gameRepository.save(game);
-    await this.boardService.saveBoard(game.getBoard());
+    await this.saveGame(game);
     return game;
   }
 
   async move(color: Color, from: Position, to: Position): Promise<Game> {
     const game = await this.getGame();
     game.move(color, from, to);
+    await this.saveGame(game);
+    return game;
+  }
+
+  private async saveGame(game: Game) {
     await this.gameRepository.save(game);
     await this.boardService.saveBoard(game.getBoard());
-    return game;
   }
 }

@@ -14,36 +14,36 @@ describe('Test bishop movement', () => {
 
   it('Should move diagonally forward-left', () => {
     const position = new Position('D', 6);
-    expect(bishop.canMove(position)).toBe(true);
+    expect(bishop.canMoveTo(position)).toBe(true);
   });
 
   it('Should move diagonally forward-right', () => {
     const position = new Position('G', 7);
-    expect(bishop.canMove(position)).toBe(true);
+    expect(bishop.canMoveTo(position)).toBe(true);
   });
 
   it('Should move diagonally back-right', () => {
     const position = new Position('H', 2);
-    expect(bishop.canMove(position)).toBe(true);
+    expect(bishop.canMoveTo(position)).toBe(true);
   });
 
   it('Should move diagonally back-left', () => {
     const position = new Position('A', 1);
-    expect(bishop.canMove(position)).toBe(true);
+    expect(bishop.canMoveTo(position)).toBe(true);
   });
 
   it('Should not move horizontally', () => {
     let position = new Position('E', 3);
-    expect(bishop.canMove(position)).toBe(false);
+    expect(bishop.canMoveTo(position)).toBe(false);
     position = new Position('E', 6);
-    expect(bishop.canMove(position)).toBe(false);
+    expect(bishop.canMoveTo(position)).toBe(false);
   });
 
   it('Should not move in L', () => {
     let position = new Position('F', 7);
-    expect(bishop.canMove(position)).toBe(false);
+    expect(bishop.canMoveTo(position)).toBe(false);
     position = new Position('C', 4);
-    expect(bishop.canMove(position)).toBe(false);
+    expect(bishop.canMoveTo(position)).toBe(false);
   });
 });
 
@@ -63,16 +63,16 @@ describe('Test bishop collisions', () => {
 
   it('Should not move when there is a piece before the destination', () => {
     const position = new Position('F', 4);
-    expect(bishop.canMove(position)).toBe(false);
+    expect(bishop.canMoveTo(position)).toBe(false);
   });
 
   it('Should not move when there is an own piece in the destination', () => {
     const position = new Position('A', 3);
-    expect(bishop.canMove(position)).toBe(false);
+    expect(bishop.canMoveTo(position)).toBe(false);
   });
 
   it('Should capture when there is an opponent piece in the destination', () => {
     const position = new Position('E', 3);
-    expect(bishop.canMove(position)).toBe(true);
+    expect(bishop.canMoveTo(position)).toBe(true);
   });
 });

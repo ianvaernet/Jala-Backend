@@ -85,7 +85,7 @@ export class Game {
     return false;
   }
 
-  private threateningPieceCanBeCaptured(): boolean {
+  private pieceDoingCheckCanBeCaptured(): boolean {
     const king = this.board.getKing(this.turn);
     const threateningPieces = this.board.getThreateningPieces(king);
     if (threateningPieces.length > 1) return false;
@@ -110,7 +110,7 @@ export class Game {
     for (let ownPiece of ownPieces) {
       for (let positionToCover of positionsToCover) {
         if (
-          ownPiece.canMove(positionToCover) &&
+          ownPiece.canMoveTo(positionToCover) &&
           !this.isCheckAfterMove(ownPiece.getPosition(), positionToCover)
         ) {
           return true;
@@ -124,7 +124,7 @@ export class Game {
     return (
       this.isCheckTo(this.turn) &&
       !this.kingCanMoveOutOfCheck() &&
-      !this.threateningPieceCanBeCaptured() &&
+      !this.pieceDoingCheckCanBeCaptured() &&
       !this.kingCanBeCovered()
     );
   }

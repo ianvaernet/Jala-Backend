@@ -6,16 +6,23 @@ import { PieceNotFoundException } from './pieceNotFound.exception';
 export class Board {
   private grid: Position[];
   private game: Game;
+
   constructor(pieces: Piece[]) {
     const grid: Position[] = [];
-    for (let rank: Rank = 1; rank < 9; rank++) {
-      for (let file: FileNumber = 0; file < 8; file++) {
-        grid.push(new Position(file as FileNumber, rank as Rank));
+    const MIN_RANK: Rank = 1;
+    const MAX_RANK: Rank = 8;
+    const MIN_FILE: FileNumber = 0;
+    const MAX_FILE: FileNumber = 7;
+    for (let rank = MIN_RANK; rank <= MAX_RANK; rank++) {
+      for (let file = MIN_FILE; file <= MAX_FILE; file++) {
+        grid.push(new Position(file, rank));
       }
     }
     pieces.forEach((piece) => {
       piece.setBoard(this);
-      grid[(piece.getPosition().getRank() - 1) * 8 + piece.getPosition().getFileAsNumber()] = piece.getPosition();
+      const positionIndexInGrid =
+        (piece.getPosition().getRank() - 1) * 8 + piece.getPosition().getFileAsNumber();
+      grid[positionIndexInGrid] = piece.getPosition();
     });
     this.grid = grid;
   }
@@ -23,19 +30,20 @@ export class Board {
   static initiateBoard() {
     const pieces: Piece[] = [];
     const colors: Color[] = ['White', 'Black'];
-    const colorRanks = { White: [1, 2] as Rank[], Black: [8, 7] as Rank[] };
     const files = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] as File[];
+    const specialPiecesRank = { White: 1 as Rank, Black: 8 as Rank };
+    const pawnsRank = { White: 2 as Rank, Black: 7 as Rank };
     colors.forEach((color) => {
-      pieces.push(new Rook(color, new Position('A', colorRanks[color][0])));
-      pieces.push(new Knight(color, new Position('B', colorRanks[color][0])));
-      pieces.push(new Bishop(color, new Position('C', colorRanks[color][0])));
-      pieces.push(new Queen(color, new Position('D', colorRanks[color][0])));
-      pieces.push(new King(color, new Position('E', colorRanks[color][0])));
-      pieces.push(new Bishop(color, new Position('F', colorRanks[color][0])));
-      pieces.push(new Knight(color, new Position('G', colorRanks[color][0])));
-      pieces.push(new Rook(color, new Position('H', colorRanks[color][0])));
+      pieces.push(new Rook(color, new Position('A', specialPiecesRank[color])));
+      pieces.push(new Knight(color, new Position('B', specialPiecesRank[color])));
+      pieces.push(new Bishop(color, new Position('C', specialPiecesRank[color])));
+      pieces.push(new Queen(color, new Position('D', specialPiecesRank[color])));
+      pieces.push(new King(color, new Position('E', specialPiecesRank[color])));
+      pieces.push(new Bishop(color, new Position('F', specialPiecesRank[color])));
+      pieces.push(new Knight(color, new Position('G', specialPiecesRank[color])));
+      pieces.push(new Rook(color, new Position('H', specialPiecesRank[color])));
       files.forEach((file) => {
-        pieces.push(new Pawn(color, new Position(file, colorRanks[color][1])));
+        pieces.push(new Pawn(color, new Position(file, pawnsRank[color])));
       });
     });
     return new Board(pieces);
@@ -63,7 +71,7 @@ export class Board {
     const threateningPieces: Piece[] = [];
     const opponentPieces = this.getPieces(piece.getColor() === 'White' ? 'Black' : 'White');
     opponentPieces.forEach((opponentPiece) => {
-      if (opponentPiece.canMove(piece.getPosition())) threateningPieces.push(opponentPiece);
+      if (opponentPiece.canMoveTo(piece.getPosition())) threateningPieces.push(opponentPiece);
     });
     return threateningPieces;
   }

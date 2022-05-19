@@ -13,43 +13,43 @@ describe('Test knight movement', () => {
   });
 
   it('Should move two step forward and one step left', () => {
-    expect(knight.canMove(new Position('C', 6))).toBe(true);
+    expect(knight.canMoveTo(new Position('C', 6))).toBe(true);
   });
 
   it('Should move two step forward and one step right', () => {
-    expect(knight.canMove(new Position('E', 6))).toBe(true);
+    expect(knight.canMoveTo(new Position('E', 6))).toBe(true);
   });
 
   it('Should move two step right and one step forward', () => {
-    expect(knight.canMove(new Position('F', 5))).toBe(true);
+    expect(knight.canMoveTo(new Position('F', 5))).toBe(true);
   });
 
   it('Should move two step right and one step back', () => {
-    expect(knight.canMove(new Position('F', 3))).toBe(true);
+    expect(knight.canMoveTo(new Position('F', 3))).toBe(true);
   });
 
   it('Should move two step back and one step right', () => {
-    expect(knight.canMove(new Position('E', 2))).toBe(true);
+    expect(knight.canMoveTo(new Position('E', 2))).toBe(true);
   });
 
   it('Should move two step back and one step left', () => {
-    expect(knight.canMove(new Position('C', 2))).toBe(true);
+    expect(knight.canMoveTo(new Position('C', 2))).toBe(true);
   });
 
   it('Should move two step left and one step back', () => {
-    expect(knight.canMove(new Position('B', 3))).toBe(true);
+    expect(knight.canMoveTo(new Position('B', 3))).toBe(true);
   });
 
   it('Should move two step left and one step forward', () => {
-    expect(knight.canMove(new Position('B', 5))).toBe(true);
+    expect(knight.canMoveTo(new Position('B', 5))).toBe(true);
   });
 
   it('Should not move one step forward', () => {
-    expect(knight.canMove(new Position('D', 5))).toBe(false);
+    expect(knight.canMoveTo(new Position('D', 5))).toBe(false);
   });
 
   it('Should not move one step in diagonal', () => {
-    expect(knight.canMove(new Position('E', 5))).toBe(false);
+    expect(knight.canMoveTo(new Position('E', 5))).toBe(false);
   });
 });
 
@@ -69,11 +69,11 @@ describe('Test knight collisions', () => {
 
   it('Should not move when there is an own piece in the destination', () => {
     const position = new Position('A', 3);
-    expect(knight.canMove(position)).toBe(false);
+    expect(knight.canMoveTo(position)).toBe(false);
   });
 
   it('Should capture when there is an opponent piece in the destination', () => {
     const position = new Position('D', 2);
-    expect(knight.canMove(position)).toBe(true);
+    expect(knight.canMoveTo(position)).toBe(true);
   });
 });

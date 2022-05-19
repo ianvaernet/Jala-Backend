@@ -1,4 +1,4 @@
-import { CheckmateMoveException, Game, GameStatus } from '../../src/game';
+import { CheckmateMoveException, Game, GameOverException, GameStatus } from '../../src/game';
 import { Position } from '../../src/position';
 
 let game: Game;
@@ -79,6 +79,7 @@ describe('Test checkmate is handled properly', () => {
     game.move('White', new Position('F', 2), new Position('F', 3));
     game.move('Black', new Position('D', 8), new Position('H', 4));
     expect(game.getStatus()).toBe(GameStatus.Checkmate);
+    expect(() => game.move('White', new Position('A', 2), new Position('A', 3))).toThrow(GameOverException);
   });
 
   it('Should do the Smothered Checkmate', () => {

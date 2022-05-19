@@ -13,27 +13,27 @@ describe('Test rook movement', () => {
   });
 
   it('Should move one step forward', () => {
-    expect(rook.canMove(new Position('H', 2))).toBe(true);
+    expect(rook.canMoveTo(new Position('H', 2))).toBe(true);
   });
 
   it('Should move three steps forward', () => {
-    expect(rook.canMove(new Position('H', 4))).toBe(true);
+    expect(rook.canMoveTo(new Position('H', 4))).toBe(true);
   });
 
   it('Should move two steps aside', () => {
-    expect(rook.canMove(new Position('F', 1))).toBe(true);
+    expect(rook.canMoveTo(new Position('F', 1))).toBe(true);
   });
 
   it('Should move four steps aside', () => {
-    expect(rook.canMove(new Position('D', 1))).toBe(true);
+    expect(rook.canMoveTo(new Position('D', 1))).toBe(true);
   });
 
   it('Should not move in diagonal', () => {
-    expect(rook.canMove(new Position('G', 2))).toBe(false);
+    expect(rook.canMoveTo(new Position('G', 2))).toBe(false);
   });
 
   it('Should not move in L', () => {
-    expect(rook.canMove(new Position('G', 3))).toBe(false);
+    expect(rook.canMoveTo(new Position('G', 3))).toBe(false);
   });
 });
 
@@ -53,16 +53,16 @@ describe('Test rook collisions', () => {
 
   it('Should not move when there is a piece before the destination', () => {
     const position = new Position('F', 1);
-    expect(rook.canMove(position)).toBe(false);
+    expect(rook.canMoveTo(position)).toBe(false);
   });
 
   it('Should not move when there is an own piece in the destination', () => {
     const position = new Position('A', 4);
-    expect(rook.canMove(position)).toBe(false);
+    expect(rook.canMoveTo(position)).toBe(false);
   });
 
   it('Should capture when there is an opponent piece in the destination', () => {
     const position = new Position('D', 1);
-    expect(rook.canMove(position)).toBe(true);
+    expect(rook.canMoveTo(position)).toBe(true);
   });
 });

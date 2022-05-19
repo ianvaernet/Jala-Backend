@@ -2,8 +2,8 @@ import { Piece } from './piece';
 import { Position } from '../../position';
 
 export class Pawn extends Piece {
-  canMove(position: Position): boolean {
-    if (!super.canMove(position)) return false;
+  canMoveTo(position: Position): boolean {
+    if (!super.canMoveTo(position)) return false;
     const isInInitialPosition =
       (this.getColor() === 'White' && this.position.getRank() == 2) ||
       (this.getColor() === 'Black' && this.position.getRank() == 7);

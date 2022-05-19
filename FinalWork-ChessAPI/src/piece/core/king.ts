@@ -2,8 +2,8 @@ import { Piece } from './piece';
 import { FileNumber, Position, Rank } from '../../position';
 
 export class King extends Piece {
-  canMove(position: Position): boolean {
-    if (!super.canMove(position)) return false;
+  canMoveTo(position: Position): boolean {
+    if (!super.canMoveTo(position)) return false;
     const isKingMovement =
       Math.abs(this.position.getRank() - position.getRank()) <= 1 &&
       Math.abs(this.position.getFileAsNumber() - position.getFileAsNumber()) <= 1;
@@ -26,7 +26,7 @@ export class King extends Piece {
           rank <= MAX_RANK &&
           file >= MIN_FILE &&
           file <= MAX_FILE &&
-          this.canMove(position)
+          this.canMoveTo(position)
         ) {
           movements.push(position);
         }

@@ -11,13 +11,13 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api', router);
 
-// error handler (4 params instead of 3)
+// Error handler
 app.use(function (err: BaseException, req: Request, res: Response, next: CallableFunction) {
-  res.locals.message = err.internalMsg;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
   // eslint-disable-next-line no-console
   console.error(err);
-  res.status(err.statusCode || 500).send({ message: err.message || 'Internal Server Error', details: err.details });
+  res
+    .status(err.statusCode || 500)
+    .send({ message: err.message || 'Internal Server Error', details: err.details });
 });
 app.use(function (req: Request, res: Response, next: CallableFunction) {
   res.status(404).send('Error 404: Not Found');
