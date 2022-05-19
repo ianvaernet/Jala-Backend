@@ -49,7 +49,7 @@ export class Game {
   }
 
   move(color: Color, from: Position, to: Position): void {
-    if (this.status === GameStatus.Checkmate) throw new GameOverException();
+    if (this.status === GameStatus.Checkmate) throw new GameOverException(this.turn);
     if (this.status === GameStatus.Ready) this.setStatus(GameStatus.Playing);
     if (this.turn !== color) throw new NotYourTurnException();
     const piece = this.board.getPieceInPosition(from);
