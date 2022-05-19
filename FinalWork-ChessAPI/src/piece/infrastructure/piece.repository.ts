@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
 import { Repository } from 'typeorm';
-import { mySQLDataSource } from '../../shared';
-import { PieceMapper } from '../API';
 import { IPieceRepository, Piece } from '../core';
+import { mySQLDataSource } from '../../shared';
+import { PieceMapper } from './piece.mapper';
 import { PieceEntity } from './piece.entity';
 
 @injectable()

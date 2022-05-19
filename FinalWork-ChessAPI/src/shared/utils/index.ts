@@ -1,1 +1,1 @@
-export { validateRequest } from './validateRequest';
+export { validateRequest, isValidPosition } from './validateRequest';

@@ -1,8 +1,8 @@
 import { GameMapper } from '../../game';
 import { PositionMapper } from '../../position';
 import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from '../core';
-import { PieceEntity, PieceType } from '../infrastructure';
-import { PieceDTO } from './piece.dto';
+import { PieceEntity, PieceType } from './piece.entity';
+import { PieceDTO } from '../API/piece.dto';
 
 export class PieceMapper {
   public static toDTO(piece: Piece): PieceDTO {
@@ -18,7 +18,10 @@ export class PieceMapper {
       Knight,
       Rook,
     };
-    const piece = new pieceTypes[pieceEntity.type](pieceEntity.color, PositionMapper.toDomain(pieceEntity.position));
+    const piece = new pieceTypes[pieceEntity.type](
+      pieceEntity.color,
+      PositionMapper.toDomain(pieceEntity.position)
+    );
     piece.setId(pieceEntity.id);
     return piece;
   }

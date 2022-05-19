@@ -20,11 +20,6 @@ export class GameMapper {
     if (game.getId()) gameEntity.id = game.getId();
     gameEntity.status = game.getStatus();
     gameEntity.turn = game.getTurn();
-    // gameEntity.pieces = game
-    //   .getBoard()
-    //   .getGrid()
-    //   .filter((position) => position.getOccupiedBy())
-    //   .map((position) => PieceMapper.toPersistence(position.getOccupiedBy() as Piece));
     return gameEntity;
   }
 }
