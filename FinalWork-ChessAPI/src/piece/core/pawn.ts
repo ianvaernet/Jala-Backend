@@ -22,4 +22,8 @@ export class Pawn extends Piece {
     const isPawnCaptureMovement = oneStepForward && oneStepAside && thereIsAnOpponentPieceInDestination;
     return isPawnMovement || isPawnCaptureMovement;
   }
+
+  clone() {
+    return new Pawn(this.color, this.position.clone());
+  }
 }

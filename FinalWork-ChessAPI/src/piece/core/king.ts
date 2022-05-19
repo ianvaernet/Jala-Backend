@@ -14,12 +14,28 @@ export class King extends Piece {
     const movements: Position[] = [];
     const currentRank = this.position.getRank();
     const currentFile = this.position.getFileAsNumber();
+    const MIN_RANK = 1;
+    const MAX_RANK = 8;
+    const MIN_FILE = 0;
+    const MAX_FILE = 7;
     for (let rank = currentRank - 1; rank <= currentRank + 1; rank++) {
       for (let file = currentFile - 1; file <= currentFile + 1; file++) {
         const position = new Position(file as FileNumber, rank as Rank);
-        if (rank > 0 && file >= 0 && this.canMove(position)) movements.push(position);
+        if (
+          rank >= MIN_RANK &&
+          rank <= MAX_RANK &&
+          file >= MIN_FILE &&
+          file <= MAX_FILE &&
+          this.canMove(position)
+        ) {
+          movements.push(position);
+        }
       }
     }
     return movements;
+  }
+
+  clone() {
+    return new King(this.color, this.position.clone());
   }
 }

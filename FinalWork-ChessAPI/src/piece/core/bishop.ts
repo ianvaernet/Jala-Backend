@@ -9,4 +9,8 @@ export class Bishop extends Piece {
       Math.abs(this.position.getFileAsNumber() - position.getFileAsNumber());
     return !this.thereIsAPieceBefore(position) && isBishopMovement;
   }
+
+  clone() {
+    return new Bishop(this.color, this.position.clone());
+  }
 }

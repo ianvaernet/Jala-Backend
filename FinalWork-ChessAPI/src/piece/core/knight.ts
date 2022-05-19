@@ -6,7 +6,12 @@ export class Knight extends Piece {
     if (!super.canMove(position)) return false;
     const lateralSteps = Math.abs(this.position.getFileAsNumber() - position.getFileAsNumber());
     const verticalSteps = Math.abs(this.position.getRank() - position.getRank());
-    const isKnightMovement = (lateralSteps === 2 && verticalSteps === 1) || (lateralSteps === 1 && verticalSteps === 2);
+    const isKnightMovement =
+      (lateralSteps === 2 && verticalSteps === 1) || (lateralSteps === 1 && verticalSteps === 2);
     return isKnightMovement;
+  }
+
+  clone() {
+    return new Knight(this.color, this.position.clone());
   }
 }

@@ -44,4 +44,8 @@ export class Position {
   equals(other: Position) {
     return this.file === other.getFile() && this.rank === other.getRank();
   }
+
+  clone() {
+    return new Position(this.file, this.rank);
+  }
 }
