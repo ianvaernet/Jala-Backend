@@ -18,10 +18,11 @@ export class Board {
         grid.push(new Position(file, rank));
       }
     }
+    const FILES_PER_RANK = 8;
     pieces.forEach((piece) => {
       piece.setBoard(this);
       const positionIndexInGrid =
-        (piece.getPosition().getRank() - 1) * 8 + piece.getPosition().getFileAsNumber();
+        (piece.getPosition().getRank() - 1) * FILES_PER_RANK + piece.getPosition().getFileAsNumber();
       grid[positionIndexInGrid] = piece.getPosition();
     });
     this.grid = grid;
