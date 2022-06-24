@@ -1,8 +1,52 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
+import { v4 as uuid } from 'uuid';
+import { InvalidValueException } from '../domain/exceptions';
+import { User } from '../domain/user';
+import { DI, ListUsersFilters } from '../types';
+import { CreateUserRequest } from './dtos/createUserRequest';
+import { BadRequestException, NotFoundException } from './exceptions';
+import { UserRepository } from './userRepository';
 
 @injectable()
 export class UserService {
-  listUsers() {
-    return [];
+  constructor(@inject(DI.UserRepository) private userRepository: UserRepository) {}
+
+  async listUsers(filters: ListUsersFilters) {
+    const users = await this.userRepository.listUsers(filters);
+    return users;
+  }
+
+  async createUser(newUser: CreateUserRequest) {
+    try {
+      const user = new User({ ...newUser, id: uuid(), totalAttendance: 0 });
+      this.userRepository.saveUser(user);
+      return user;
+    } catch (error) {
+      if (error instanceof InvalidValueException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  async getUser(id: string, includeAttendances: boolean) {
+    const user = await this.userRepository.findUser(id);
+    if (!user) {
+      throw new NotFoundException(`User with id '${id}' not found`);
+    }
+
+    if (includeAttendances) {
+      //const attendances = getAttendancesByUserId(user.id.getValue());
+      user.attendances = [];
+    }
+
+    return user;
+  }
+
+  async deleteUser(id: string) {
+    const isDeleted = await this.userRepository.deleteUser(id);
+    if (!isDeleted) {
+      throw new NotFoundException(`User with id '${id}' not found`);
+    }
   }
 }

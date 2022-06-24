@@ -8,7 +8,7 @@ export const mySQLDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.NODE_ENV !== 'test' ? process.env.DB_NAME : process.env.DB_NAME + '_test',
-  entities: [__dirname + '../../../**/*.entity.{ts,js}'],
+  entities: [__dirname + '../../**/*.entity.{ts,js}'],
   synchronize: true,
   migrationsRun: false,
   logging: false,

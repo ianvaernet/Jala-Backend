@@ -2,7 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { DIContainer } from './DIContainer';
-import './containers/presentation-container';
+import './infrastructure/presentation/userController';
 import swaggerUI from 'swagger-ui-express';
 import swaggerDocument from './infrastructure/presentation/swagger.json';
 import { BaseException } from './application/exceptions';

@@ -9,8 +9,8 @@ export class UserEntity {
   nickname: string;
 
   @Column()
-  firstName: string;
+  fullName: string;
 
   @Column()
-  lastName: string;
+  totalAttendance: number;
 }

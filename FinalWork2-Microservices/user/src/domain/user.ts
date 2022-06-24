@@ -1,29 +1,34 @@
-import { UserFirstName } from './valueObjects/userFirstName';
+import { Attendance } from '../types';
+import { AggregateRoot } from './aggregateRoot';
+import { UserFullName } from './valueObjects/userFullName';
 import { UserId } from './valueObjects/userId';
-import { UserLastName } from './valueObjects/userLastName';
 import { UserNickname } from './valueObjects/userNickName';
+import { UserTotalAttendance } from './valueObjects/userTotalAttendances';
 
 type UserProps = {
   id: UserId;
   nickname: UserNickname;
-  firstName: UserFirstName;
-  lastName: UserLastName;
+  fullName: UserFullName;
+  totalAttendance: UserTotalAttendance;
+  attendances?: Attendance[];
 };
 
 type UserPrimitiveProps = {
   id: string;
   nickname: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
+  totalAttendance: number;
+  attendances?: Attendance[];
 };
 
-export class User {
-  private props: UserProps;
+export class User extends AggregateRoot<UserProps> {
   constructor(props: UserPrimitiveProps) {
+    super(props);
     this.props.id = new UserId(props.id);
     this.props.nickname = new UserNickname(props.nickname);
-    this.props.firstName = new UserFirstName(props.firstName);
-    this.props.lastName = new UserLastName(props.lastName);
+    this.props.fullName = new UserFullName(props.fullName);
+    this.props.totalAttendance = new UserTotalAttendance(props.totalAttendance);
+    this.props.attendances = props.attendances;
   }
 
   get id(): UserId {
@@ -32,10 +37,16 @@ export class User {
   get nickname(): UserNickname {
     return this.props.nickname;
   }
-  get firstName(): UserFirstName {
-    return this.props.firstName;
+  get fullName(): UserFullName {
+    return this.props.fullName;
   }
-  get lastName(): UserLastName {
-    return this.props.lastName;
+  get totalAttendance(): UserTotalAttendance {
+    return this.props.totalAttendance;
+  }
+  get attendances(): Attendance[] | undefined {
+    return this.props.attendances;
+  }
+  set attendances(attendances: Attendance[] | undefined) {
+    this.props.attendances = attendances;
   }
 }

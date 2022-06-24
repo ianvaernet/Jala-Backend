@@ -14,17 +14,57 @@
   "servers": [
     {
       "description": "Local server",
-      "url": "http://localhost:8080/api"
+      "url": "http://localhost:8000/api"
     }
   ],
   "tags": [
     {
-      "name": "users",
-      "description": "Everything about users"
+      "name": "users"
     }
   ],
   "paths": {
     "/users": {
+      "get": {
+        "tags": ["users"],
+        "summary": "List users",
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "nickname",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "fullName",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/APIResponse" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/UserToList" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
       "post": {
         "tags": ["users"],
         "summary": "Create a new user",
@@ -59,13 +99,71 @@
               }
             }
           },
+          "400": { "$ref": "#/components/responses/BadRequest" },
           "500": { "$ref": "#/components/responses/InternalServerError" }
-        },
-        "security": [
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get a user by ID",
+        "operationId": "getUser",
+        "parameters": [
           {
-            "JWT": []
+            "name": "id",
+            "in": "path",
+            "required": true
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/APIResponse" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": { "$ref": "#/components/schemas/User" }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "delete": {
+        "tags": ["users"],
+        "summary": "Delete a user by ID",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
       }
     }
   },
@@ -83,6 +181,81 @@
           },
           "data": {
             "type": "object"
+          }
+        }
+      },
+      "UserToCreate": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      },
+      "UserToList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string",
+            "minLength": 2
+          },
+          "fullName": {
+            "type": "string",
+            "minLength": 5
+          },
+          "totalAttendance": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string",
+            "minLength": 2
+          },
+          "fullName": {
+            "type": "string",
+            "minLength": 5
+          },
+          "totalAttendance": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "attendances": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Attendance" }
+          }
+        }
+      },
+      "Attendance": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
           }
         }
       }
