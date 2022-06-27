@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  attendance-db:
+    image: mongo:latest
+    container_name: attendance-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${DB_USER}:${DB_PASSWORD}@attendance-db:27017/
+  attendance-app:
+    image: attendance-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: attendance-app
+    ports:
+      - '${CONTAINER_PORT}:3000'
+    depends_on:
+      - 'attendance-db'
+    links:
+      - 'attendance-db'
+    env_file:
+      - .env
+    volumes:
+      - .:/home/node/app
+    entrypoint: ['/bin/sh', '-c', 'npx concurrently "npm run build:watch" "npm run local-start"']
