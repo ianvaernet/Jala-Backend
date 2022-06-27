@@ -1,9 +1,10 @@
 import { inject } from 'inversify';
-import { Request, Response } from 'express';
+import { Request, Response as ExpressResponse } from 'express';
 import { controller, httpGet, BaseHttpController, httpPost, httpDelete, request, response, requestParam } from 'inversify-express-utils';
 import { UserService } from '../../application/userService';
 import { DI } from '../../types';
 import { UserMapper } from '../userMapper';
+import { Response } from './response';
 
 @controller('/users')
 export class UserController extends BaseHttpController {
@@ -12,29 +13,29 @@ export class UserController extends BaseHttpController {
   }
 
   @httpGet('/')
-  private async listUsers(@request() req: Request, @response() res: Response) {
+  private async listUsers(@request() req: Request, @response() res: ExpressResponse) {
     const users = await this.userService.listUsers(req.query);
     const userDtos = users.map((user) => UserMapper.toResponseUser(user));
-    res.status(200).json({ data: userDtos });
+    Response.ok(res, userDtos);
   }
 
   @httpPost('/')
-  private async createUser(@request() req: Request, @response() res: Response) {
+  private async createUser(@request() req: Request, @response() res: ExpressResponse) {
     const user = await this.userService.createUser(req.body);
     const userDto = UserMapper.toResponseUser(user);
-    res.status(201).json({ data: userDto, message: 'User successfully created' });
+    Response.created(res, userDto, 'User successfully created');
   }
 
   @httpGet('/:id')
-  private async getUser(@requestParam('id') id: string, @response() res: Response) {
+  private async getUser(@requestParam('id') id: string, @response() res: ExpressResponse) {
     const user = await this.userService.getUser(id, true);
     const userDto = UserMapper.toResponseUser(user);
-    res.status(200).json({ data: userDto });
+    Response.ok(res, userDto);
   }
 
   @httpDelete('/:id')
-  private async deleteUser(@requestParam('id') id: string, @response() res: Response) {
+  private async deleteUser(@requestParam('id') id: string, @response() res: ExpressResponse) {
     await this.userService.deleteUser(id);
-    res.status(200).json({ message: 'User successfully deleted' });
+    Response.ok(res, null, 'User successfully deleted');
   }
 }
