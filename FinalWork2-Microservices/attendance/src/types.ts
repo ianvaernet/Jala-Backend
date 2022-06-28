@@ -3,10 +3,3 @@ export const DI = {
   AttendanceService: Symbol('AttendanceService'),
   AttendanceRepository: Symbol('AttendanceRepository'),
 };
-
-export type Attendance = {
-  id: string;
-  startDate: string;
-  endDate: string;
-  notes?: string;
-};

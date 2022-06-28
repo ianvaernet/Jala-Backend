@@ -14,35 +14,30 @@
   "servers": [
     {
       "description": "Local server",
-      "url": "http://localhost:8000/api"
+      "url": "http://localhost:8001/api"
     }
   ],
   "tags": [
     {
-      "name": "users"
+      "name": "attendances"
     }
   ],
   "paths": {
-    "/users": {
+    "/attendances": {
       "get": {
-        "tags": ["users"],
-        "summary": "List users",
-        "operationId": "listUsers",
+        "tags": ["attendances"],
+        "summary": "List attendances",
+        "operationId": "listAttendances",
         "parameters": [
           {
-            "name": "nickname",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "fullName",
+            "name": "userId",
             "in": "query",
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "The list of users.",
+            "description": "The list of attendances.",
             "content": {
               "application/json": {
                 "schema": {
@@ -53,7 +48,7 @@
                       "properties": {
                         "data": {
                           "type": "array",
-                          "items": { "$ref": "#/components/schemas/UserToList" }
+                          "items": { "$ref": "#/components/schemas/Attendance" }
                         }
                       }
                     }
@@ -66,15 +61,15 @@
         }
       },
       "post": {
-        "tags": ["users"],
-        "summary": "Create a new user",
-        "operationId": "createUser",
+        "tags": ["attendances"],
+        "summary": "Create a new attendance",
+        "operationId": "createAttendance",
         "requestBody": {
-          "description": "The user to create",
+          "description": "The attendances to create",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UserToCreate"
+                "$ref": "#/components/schemas/AttendanceToCreate"
               }
             }
           },
@@ -82,7 +77,7 @@
         },
         "responses": {
           "201": {
-            "description": "User successfully created.",
+            "description": "Attendance successfully created.",
             "content": {
               "application/json": {
                 "schema": {
@@ -91,7 +86,7 @@
                     {
                       "type": "object",
                       "properties": {
-                        "data": { "$ref": "#/components/schemas/User" }
+                        "data": { "$ref": "#/components/schemas/Attendance" }
                       }
                     }
                   ]
@@ -104,45 +99,11 @@
         }
       }
     },
-    "/users/{id}": {
-      "get": {
-        "tags": ["users"],
-        "summary": "Get a user by ID",
-        "operationId": "getUser",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The requested user.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    { "$ref": "#/components/schemas/APIResponse" },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": { "$ref": "#/components/schemas/User" }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/InternalServerError" }
-        }
-      },
+    "/attendances/{id}": {
       "delete": {
-        "tags": ["users"],
-        "summary": "Delete a user by ID",
-        "operationId": "deleteUser",
+        "tags": ["attendances"],
+        "summary": "Delete an attendance by ID",
+        "operationId": "deleteAttendances",
         "parameters": [
           {
             "name": "id",
@@ -152,7 +113,7 @@
         ],
         "responses": {
           "200": {
-            "description": "User successfully deleted.",
+            "description": "Attendance successfully deleted.",
             "content": {
               "application/json": {
                 "schema": {
@@ -184,59 +145,26 @@
           }
         }
       },
-      "UserToCreate": {
+      "AttendanceToCreate": {
         "type": "object",
         "properties": {
-          "nickname": {
-            "type": "string"
-          },
-          "fullName": {
+          "startDate": {
             "type": "string",
-            "minLength": 5
-          }
-        }
-      },
-      "UserToList": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
+            "format": "date-time",
+            "required": true
           },
-          "nickname": {
+          "endDate": {
             "type": "string",
-            "minLength": 2
+            "format": "date-time",
+            "required": true
           },
-          "fullName": {
+          "userId": {
             "type": "string",
-            "minLength": 5
+            "required": true
           },
-          "totalAttendance": {
-            "type": "integer",
-            "minimum": 0
-          }
-        }
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "nickname": {
+          "notes": {
             "type": "string",
-            "minLength": 2
-          },
-          "fullName": {
-            "type": "string",
-            "minLength": 5
-          },
-          "totalAttendance": {
-            "type": "integer",
-            "minimum": 0
-          },
-          "attendances": {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/Attendance" }
+            "required": false
           }
         }
       },
@@ -244,18 +172,26 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "required": true
           },
           "startDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "required": true
           },
           "endDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "required": true
+          },
+          "userId": {
+            "type": "string",
+            "required": true
           },
           "notes": {
-            "type": "string"
+            "type": "string",
+            "required": false
           }
         }
       }
