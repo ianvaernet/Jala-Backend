@@ -3,14 +3,14 @@ import { Attendance } from '../domain/attendance';
 import { AttendanceRepository } from './attendanceRepository';
 import { CreateAttendanceRequest } from './dto/createAttendanceRequest';
 import { v4 as uuid } from 'uuid';
-import { DI } from '../types';
+import { DI, ListAttendancesFilters } from '../types';
 
 @injectable()
 export class AttendanceService {
   constructor(@inject(DI.AttendanceRepository) private attendanceRepository: AttendanceRepository) {}
 
-  async listAttendances() {
-    const attendances = this.attendanceRepository.listAttendances();
+  async listAttendances(filters: ListAttendancesFilters) {
+    const attendances = this.attendanceRepository.listAttendances(filters);
     return attendances;
   }
 

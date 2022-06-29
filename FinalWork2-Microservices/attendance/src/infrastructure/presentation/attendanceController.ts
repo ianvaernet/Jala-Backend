@@ -2,7 +2,7 @@ import { inject } from 'inversify';
 import { Request, Response as ExpressResponse } from 'express';
 import { controller, httpGet, BaseHttpController, httpPost, httpDelete, request, response, requestParam } from 'inversify-express-utils';
 import { AttendanceService } from '../../application/attendanceService';
-import { DI } from '../../types';
+import { DI, ListAttendancesFilters } from '../../types';
 import { AttendanceMapper } from '../attendanceMapper';
 import { Response } from './response';
 
@@ -14,7 +14,11 @@ export class AttendanceController extends BaseHttpController {
 
   @httpGet('/')
   private async listAttendance(@request() req: Request, @response() res: ExpressResponse) {
-    const attendances = await this.attendanceService.listAttendances();
+    const filters: ListAttendancesFilters = {};
+    if (req.query.userId) {
+      filters.userId = req.query.userId as string;
+    }
+    const attendances = await this.attendanceService.listAttendances(filters);
     Response.ok(res, attendances);
   }
 

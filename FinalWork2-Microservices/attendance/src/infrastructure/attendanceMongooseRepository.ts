@@ -2,13 +2,14 @@ import { injectable } from 'inversify';
 import { AttendanceRepository } from '../application/attendanceRepository';
 import { NotFoundException } from '../application/exceptions';
 import { Attendance } from '../domain/attendance';
+import { ListAttendancesFilters } from '../types';
 import { AttendanceEntity } from './attendance.entity';
 import { AttendanceMapper } from './attendanceMapper';
 
 @injectable()
 export class AttendanceMongooseRepository implements AttendanceRepository {
-  async listAttendances(): Promise<Attendance[]> {
-    const attendanceEntities = await AttendanceEntity.find();
+  async listAttendances(filters: ListAttendancesFilters): Promise<Attendance[]> {
+    const attendanceEntities = await AttendanceEntity.find(filters);
     return attendanceEntities.map((attendanceEntity) => AttendanceMapper.toDomain(attendanceEntity));
   }
 

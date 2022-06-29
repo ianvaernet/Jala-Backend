@@ -3,3 +3,7 @@ export const DI = {
   AttendanceService: Symbol('AttendanceService'),
   AttendanceRepository: Symbol('AttendanceRepository'),
 };
+
+export type ListAttendancesFilters = {
+  userId?: string;
+};
