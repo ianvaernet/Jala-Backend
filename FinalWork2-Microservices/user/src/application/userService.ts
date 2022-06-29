@@ -3,13 +3,17 @@ import { v4 as uuid } from 'uuid';
 import { InvalidValueException } from '../domain/exceptions';
 import { User } from '../domain/user';
 import { DI, ListUsersFilters } from '../types';
+import { AttendanceService } from './attendanceService';
 import { CreateUserRequest } from './dtos/createUserRequest';
 import { BadRequestException, NotFoundException } from './exceptions';
 import { UserRepository } from './userRepository';
 
 @injectable()
 export class UserService {
-  constructor(@inject(DI.UserRepository) private userRepository: UserRepository) {}
+  constructor(
+    @inject(DI.UserRepository) private userRepository: UserRepository,
+    @inject(DI.AttendanceService) private attendanceService: AttendanceService
+  ) {}
 
   async listUsers(filters: ListUsersFilters) {
     const users = await this.userRepository.listUsers(filters);
@@ -36,8 +40,8 @@ export class UserService {
     }
 
     if (includeAttendances) {
-      //const attendances = getAttendancesByUserId(user.id.getValue());
-      user.attendances = [];
+      const attendances = await this.attendanceService.listAttendancesByUserId(user.id.getValue());
+      user.attendances = attendances;
     }
 
     return user;
