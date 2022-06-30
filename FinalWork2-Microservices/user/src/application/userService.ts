@@ -21,6 +21,9 @@ export class UserService {
   }
 
   async createUser(newUser: CreateUserRequest) {
+    if (!newUser.nickname) throw new BadRequestException('nickname is required');
+    if (!newUser.fullName) throw new BadRequestException('fullName is required');
+
     try {
       const user = new User({ ...newUser, id: uuid(), totalAttendance: 0 });
       this.userRepository.saveUser(user);
