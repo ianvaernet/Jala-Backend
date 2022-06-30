@@ -14,4 +14,13 @@ export class AttendanceService {
     const { data } = (await response.json()) as { data: Attendance[] };
     return data;
   }
+
+  async deleteUserAttendances(userId: string): Promise<void> {
+    const response = await fetch(`${this.AttendanceApiUrl}/users/${userId}/attendances`, {
+      method: 'DELETE',
+    });
+    if (response.status !== 200) {
+      throw new Error("Error deleting user's attendances");
+    }
+  }
 }
