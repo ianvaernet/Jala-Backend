@@ -19,7 +19,8 @@ export class AttendanceController extends BaseHttpController {
       filters.userId = req.query.userId as string;
     }
     const attendances = await this.attendanceService.listAttendances(filters);
-    Response.ok(res, attendances);
+    const attendanceDtos = attendances.map((attendance) => AttendanceMapper.toResponseDto(attendance));
+    Response.ok(res, attendanceDtos);
   }
 
   @httpPost('attendances')

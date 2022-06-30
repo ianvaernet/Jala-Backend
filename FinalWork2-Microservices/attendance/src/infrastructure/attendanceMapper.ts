@@ -14,21 +14,21 @@ export class AttendanceMapper {
 
   static toPersistence(attendance: Attendance) {
     return new AttendanceEntity({
-      _id: attendance.id,
-      startDate: attendance.startDate,
-      endDate: attendance.endDate,
-      notes: attendance.notes,
-      userId: attendance.userId,
+      _id: attendance.id.getValue(),
+      startDate: attendance.startDate.getValue(),
+      endDate: attendance.endDate.getValue(),
+      notes: attendance.notes?.getValue(),
+      userId: attendance.userId.getValue(),
     });
   }
 
   static toResponseDto(attendance: Attendance) {
     return {
-      id: attendance.id,
-      startDate: attendance.startDate,
-      endDate: attendance.endDate,
-      notes: attendance.notes,
-      userId: attendance.userId,
+      id: attendance.id.getValue(),
+      startDate: attendance.startDate.getValue(),
+      endDate: attendance.endDate.getValue(),
+      notes: attendance.notes?.getValue(),
+      userId: attendance.userId.getValue(),
     };
   }
 }
