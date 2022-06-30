@@ -5,4 +5,5 @@ export interface AttendanceRepository {
   listAttendances(filters: ListAttendancesFilters): Promise<Attendance[]>;
   saveAttendance(attendance: Attendance): Promise<void>;
   deleteAttendance(id: string): Promise<void>;
+  deleteUserAttendances(userId: string): Promise<void>;
 }

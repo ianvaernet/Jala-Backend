@@ -32,4 +32,8 @@ export class AttendanceService {
   async deleteAttendance(id: string) {
     await this.attendanceRepository.deleteAttendance(id);
   }
+
+  async deleteUserAttendances(userId: string) {
+    await this.attendanceRepository.deleteUserAttendances(userId);
+  }
 }

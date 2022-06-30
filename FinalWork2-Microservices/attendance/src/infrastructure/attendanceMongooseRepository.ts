@@ -24,4 +24,8 @@ export class AttendanceMongooseRepository implements AttendanceRepository {
       throw new NotFoundException(`Attendance with id ${id} not found`);
     }
   }
+
+  async deleteUserAttendances(userId: string) {
+    const { deletedCount } = await AttendanceEntity.deleteMany({ userId });
+  }
 }
