@@ -7,12 +7,14 @@ import { DI, ListAttendancesFilters } from '../types';
 import { UserService } from './userService';
 import { BadRequestException, NotFoundException } from './exceptions';
 import { InvalidValueException } from '../domain/exceptions';
+import { StatsService } from './statsService';
 
 @injectable()
 export class AttendanceService {
   constructor(
     @inject(DI.AttendanceRepository) private attendanceRepository: AttendanceRepository,
-    @inject(DI.UserService) private userService: UserService
+    @inject(DI.UserService) private userService: UserService,
+    @inject(DI.StatsService) private statsService: StatsService
   ) {}
 
   async listAttendances(filters: ListAttendancesFilters) {
@@ -32,6 +34,7 @@ export class AttendanceService {
         throw new NotFoundException(`There is no user with id ${attendance.userId.getValue()}`);
       }
       await this.attendanceRepository.saveAttendance(attendance);
+      this.statsService.publishMessage(JSON.stringify({ event: 'AttendanceCreated', userId: attendance.userId.getValue() }));
       return attendance;
     } catch (error) {
       if (error instanceof InvalidValueException) {
@@ -42,7 +45,9 @@ export class AttendanceService {
   }
 
   async deleteAttendance(id: string) {
+    const attendance = (await this.attendanceRepository.findAttendance(id)) as Attendance;
     await this.attendanceRepository.deleteAttendance(id);
+    this.statsService.connectAndPublishMessage(JSON.stringify({ event: 'AttendanceDeleted', userId: attendance.userId.getValue() }));
   }
 
   async deleteUserAttendances(userId: string) {

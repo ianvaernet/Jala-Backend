@@ -13,6 +13,13 @@ export class AttendanceMongooseRepository implements AttendanceRepository {
     return attendanceEntities.map((attendanceEntity) => AttendanceMapper.toDomain(attendanceEntity));
   }
 
+  async findAttendance(id: string): Promise<Attendance | void> {
+    const attendanceEntity = await AttendanceEntity.findById(id);
+    if (attendanceEntity) {
+      return AttendanceMapper.toDomain(attendanceEntity);
+    }
+  }
+
   async saveAttendance(attendance: Attendance) {
     const attendanceEntity = AttendanceMapper.toPersistence(attendance);
     await attendanceEntity.save();

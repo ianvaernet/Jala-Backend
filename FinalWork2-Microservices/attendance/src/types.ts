@@ -5,6 +5,7 @@ export const DI = {
   AttendanceService: Symbol('AttendanceService'),
   AttendanceRepository: Symbol('AttendanceRepository'),
   UserService: Symbol('UserService'),
+  StatsService: Symbol('StatsService'),
 };
 
 export type ListAttendancesFilters = {

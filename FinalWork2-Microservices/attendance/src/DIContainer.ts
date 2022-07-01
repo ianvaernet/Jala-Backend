@@ -5,6 +5,7 @@ import { AttendanceService } from './application/attendanceService';
 import { AttendanceController } from './infrastructure/presentation/attendanceController';
 import { DI } from './types';
 import { UserService } from './application/userService';
+import { StatsService } from './application/statsService';
 
 export const DIContainer = new Container();
 
@@ -12,3 +13,4 @@ DIContainer.bind<AttendanceController>(DI.AttendanceController).to(AttendanceCon
 DIContainer.bind<AttendanceService>(DI.AttendanceService).to(AttendanceService);
 DIContainer.bind<AttendanceRepository>(DI.AttendanceRepository).to(AttendanceMongooseRepository);
 DIContainer.bind<UserService>(DI.UserService).to(UserService);
+DIContainer.bind<StatsService>(DI.StatsService).to(StatsService);

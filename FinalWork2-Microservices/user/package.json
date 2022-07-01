@@ -6,8 +6,6 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "build-image": "docker build -t user-app --no-cache .",
-    "build-image:dev": "docker build -t user-app --no-cache -f Dockerfile.dev .",
     "create-test-db": "export $(cat .env | xargs) && CONTAINER_ID=$(docker ps --filter name=\"user-db\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID mysql -uroot -p$DB_ROOT_PASSWORD -e \"CREATE DATABASE ${DB_NAME}_test; GRANT ALL ON ${DB_NAME}_test.* TO 'user'@'%';\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --report-unused-disable-directives",
     "local-start": "nodemon dist",
@@ -17,8 +15,8 @@
     "mysql": "export $(cat .env | xargs) && CONTAINER_ID=$(docker ps --filter name=\"user-db\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID mysql -u$DB_USER -p$DB_PASSWORD $DB_NAME",
     "restart": "npm run stop && npm run start",
     "ssh": "CONTAINER_ID=$(docker ps --filter name=\"user-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID sh",
-    "start": "docker-compose -p user-app up -d",
-    "stop": "docker-compose -p user-app stop",
+    "start": "docker-compose -p backend-user up -d",
+    "stop": "docker-compose -p backend-user stop",
     "test": "CONTAINER_ID=$(docker ps --filter name=\"user-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test",
     "test:coverage": "CONTAINER_ID=$(docker ps --filter name=\"user-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test:coverage"
   },
