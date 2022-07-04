@@ -36,6 +36,15 @@ export class UserService {
     }
   }
 
+  async updateUser(id: string, updatedUser: { totalAttendance: number }) {
+    const user = await this.getUser(id, false);
+    if (updatedUser.totalAttendance !== user.totalAttendance.getValue()) {
+      user.updateTotalAttendance(updatedUser.totalAttendance);
+      await this.userRepository.saveUser(user);
+    }
+    return user;
+  }
+
   async getUser(id: string, includeAttendances: boolean) {
     const user = await this.userRepository.findUser(id);
     if (!user) {

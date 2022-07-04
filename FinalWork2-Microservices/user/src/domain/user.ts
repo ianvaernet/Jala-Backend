@@ -49,4 +49,8 @@ export class User extends AggregateRoot<UserProps> {
   set attendances(attendances: Attendance[] | undefined) {
     this.props.attendances = attendances;
   }
+
+  updateTotalAttendance(totalAttendance: number) {
+    this.props.totalAttendance = new UserTotalAttendance(totalAttendance);
+  }
 }

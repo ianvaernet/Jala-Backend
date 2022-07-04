@@ -1,6 +1,16 @@
 import { inject } from 'inversify';
 import { Request, Response as ExpressResponse } from 'express';
-import { controller, httpGet, BaseHttpController, httpPost, httpDelete, request, response, requestParam } from 'inversify-express-utils';
+import {
+  controller,
+  httpGet,
+  BaseHttpController,
+  httpPost,
+  httpDelete,
+  request,
+  response,
+  requestParam,
+  httpPut,
+} from 'inversify-express-utils';
 import { UserService } from '../../application/userService';
 import { DI } from '../../types';
 import { UserMapper } from '../userMapper';
@@ -24,6 +34,13 @@ export class UserController extends BaseHttpController {
     const user = await this.userService.createUser(req.body);
     const userDto = UserMapper.toResponseUser(user);
     Response.created(res, userDto, 'User successfully created');
+  }
+
+  @httpPut('/:id')
+  private async updateUser(@request() req: Request, @response() res: ExpressResponse) {
+    const user = await this.userService.updateUser(req.params.id, req.body);
+    const userDto = UserMapper.toResponseUser(user);
+    Response.created(res, userDto, 'User successfully updated');
   }
 
   @httpGet('/:id')
