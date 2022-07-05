@@ -5,3 +5,8 @@ export type User = {
   totalAttendance: number;
   attendances?: unknown[];
 };
+
+export enum Event {
+  AttendanceCreated = 'AttendanceCreated',
+  AttendanceDeleted = 'AttendanceDeleted',
+}

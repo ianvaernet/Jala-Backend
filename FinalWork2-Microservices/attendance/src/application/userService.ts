@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import fetch from 'node-fetch';
 import { User } from '../types';
+import { NotFoundException } from './exceptions';
 
 @injectable()
 export class UserService {
@@ -12,6 +13,9 @@ export class UserService {
   async getUser(id: string): Promise<User> {
     const response = await fetch(`${this.userApiUrl}/users/${id}`);
     const { data } = (await response.json()) as { data: User };
+    if (!data) {
+      throw new NotFoundException(`There is no user with id ${id}`);
+    }
     return data;
   }
 }

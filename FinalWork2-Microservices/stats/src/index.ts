@@ -1,5 +1,6 @@
 import ampq from 'amqplib/callback_api';
 import { UserService } from './userService';
+import { Event } from './types';
 
 const queue = 'stats';
 const userService = new UserService();
@@ -17,15 +18,16 @@ ampq.connect(
       if (err) console.error(err);
       else console.log('Connection with queue established');
       channel.assertQueue(queue, { durable: false });
+      
       channel.consume(queue, async function (msg) {
         if (msg) {
           const stringMsg = msg.content.toString();
           console.log(stringMsg);
           const message = JSON.parse(stringMsg);
           let updatedUser;
-          if (message.event === 'AttendanceCreated') {
+          if (message.event === Event.AttendanceCreated) {
             updatedUser = await userService.incrementTotalAttendance(message.userId);
-          } else if (message.event === 'AttendanceDeleted') {
+          } else if (message.event === Event.AttendanceDeleted) {
             updatedUser = await userService.decrementTotalAttendance(message.userId);
           }
           if (updatedUser) {

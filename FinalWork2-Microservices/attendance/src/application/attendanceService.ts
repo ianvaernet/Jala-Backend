@@ -5,7 +5,7 @@ import { CreateAttendanceRequest } from './dto/createAttendanceRequest';
 import { v4 as uuid } from 'uuid';
 import { DI, ListAttendancesFilters } from '../types';
 import { UserService } from './userService';
-import { BadRequestException, NotFoundException } from './exceptions';
+import { BadRequestException } from './exceptions';
 import { InvalidValueException } from '../domain/exceptions';
 import { StatsService } from './statsService';
 
@@ -29,10 +29,7 @@ export class AttendanceService {
 
     try {
       const attendance = new Attendance({ ...newAttendance, id: uuid() });
-      const user = await this.userService.getUser(attendance.userId.getValue());
-      if (!user) {
-        throw new NotFoundException(`There is no user with id ${attendance.userId.getValue()}`);
-      }
+      await this.userService.getUser(attendance.userId.getValue());
       await this.attendanceRepository.saveAttendance(attendance);
       this.statsService.publishMessage(JSON.stringify({ event: 'AttendanceCreated', userId: attendance.userId.getValue() }));
       return attendance;
@@ -47,7 +44,7 @@ export class AttendanceService {
   async deleteAttendance(id: string) {
     const attendance = (await this.attendanceRepository.findAttendance(id)) as Attendance;
     await this.attendanceRepository.deleteAttendance(id);
-    this.statsService.connectAndPublishMessage(JSON.stringify({ event: 'AttendanceDeleted', userId: attendance.userId.getValue() }));
+    this.statsService.publishMessage(JSON.stringify({ event: 'AttendanceDeleted', userId: attendance.userId.getValue() }));
   }
 
   async deleteUserAttendances(userId: string) {

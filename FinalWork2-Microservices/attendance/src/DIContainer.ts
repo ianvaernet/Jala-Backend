@@ -13,4 +13,4 @@ DIContainer.bind<AttendanceController>(DI.AttendanceController).to(AttendanceCon
 DIContainer.bind<AttendanceService>(DI.AttendanceService).to(AttendanceService);
 DIContainer.bind<AttendanceRepository>(DI.AttendanceRepository).to(AttendanceMongooseRepository);
 DIContainer.bind<UserService>(DI.UserService).to(UserService);
-DIContainer.bind<StatsService>(DI.StatsService).to(StatsService);
+DIContainer.bind<StatsService>(DI.StatsService).to(StatsService).inSingletonScope();
