@@ -1,16 +1,14 @@
 import fetch from 'node-fetch';
+import { AttendanceService } from './attendanceService';
 import { User } from './types';
 
 export class UserService {
-  userApiUrl: string;
+  private userApiUrl: string;
+  private attendanceService: AttendanceService;
+
   constructor() {
     this.userApiUrl = process.env.USER_API_URL as string;
-  }
-
-  private async getUser(id: string): Promise<User> {
-    const response = await fetch(`${this.userApiUrl}/users/${id}`);
-    const { data } = (await response.json()) as { data: User };
-    return data;
+    this.attendanceService = new AttendanceService();
   }
 
   private async updateUser(id: string, user: { totalAttendance: number }): Promise<User> {
@@ -25,15 +23,9 @@ export class UserService {
     return data;
   }
 
-  async incrementTotalAttendance(id: string): Promise<User> {
-    const user = await this.getUser(id);
-    const updatedUser = await this.updateUser(id, { totalAttendance: user.totalAttendance + 1 });
-    return updatedUser;
-  }
-
-  async decrementTotalAttendance(id: string): Promise<User> {
-    const user = await this.getUser(id);
-    const updatedUser = await this.updateUser(id, { totalAttendance: user.totalAttendance - 1 });
+  async updateTotalAttendance(id: string): Promise<User> {
+    const totalAttendances = await this.attendanceService.getAttendancesByUser(id);
+    const updatedUser = await this.updateUser(id, { totalAttendance: totalAttendances.length });
     return updatedUser;
   }
 }

@@ -126,34 +126,6 @@
           "500": { "$ref": "#/components/responses/InternalServerError" }
         }
       }
-    },
-    "/users/{id}/attendances": {
-      "delete": {
-        "tags": ["attendances"],
-        "summary": "Delete all attendances of a user",
-        "operationId": "deleteUserAttendances",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User's attendances successfully deleted.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/APIResponse"
-                }
-              }
-            }
-          },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "500": { "$ref": "#/components/responses/InternalServerError" }
-        }
-      }
     }
   },
   "components": {
