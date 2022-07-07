@@ -6,17 +6,24 @@ import { DI, ListUsersFilters } from '../types';
 import { AttendanceService } from './attendanceService';
 import { CreateUserRequest } from './dtos/createUserRequest';
 import { BadRequestException, NotFoundException } from './exceptions';
+import { SearchService } from './searchService';
 import { UserRepository } from './userRepository';
 
 @injectable()
 export class UserService {
   constructor(
     @inject(DI.UserRepository) private userRepository: UserRepository,
-    @inject(DI.AttendanceService) private attendanceService: AttendanceService
+    @inject(DI.AttendanceService) private attendanceService: AttendanceService,
+    @inject(DI.SearchService) private searchService: SearchService
   ) {}
 
   async listUsers(filters: ListUsersFilters) {
     const users = await this.userRepository.listUsers(filters);
+    return users;
+  }
+
+  async searchUsers(search: string) {
+    const users = await this.searchService.searchUsers(search);
     return users;
   }
 
@@ -26,7 +33,8 @@ export class UserService {
 
     try {
       const user = new User({ ...newUser, id: uuid(), totalAttendance: 0 });
-      this.userRepository.saveUser(user);
+      await this.userRepository.saveUser(user);
+      await this.searchService.indexUser(user);
       return user;
     } catch (error) {
       if (error instanceof InvalidValueException) {

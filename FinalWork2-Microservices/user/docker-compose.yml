@@ -31,3 +31,13 @@ services:
     volumes:
       - .:/home/node/app
     entrypoint: ['/bin/sh', '-c', 'npx concurrently "npm run build:watch" "npm run local-start"']
+  user-elasticsearch:
+    image: elasticsearch:8.3.1
+    container_name: user-elasticsearch
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: false
+      xpack.security.transport.ssl.enabled: false
+    ports:
+      - "9200:9200"
+      - "9300:9300"

@@ -3,7 +3,9 @@ import { UserService } from './userService';
 
 const queue = 'stats';
 const userService = new UserService();
+const connectionEstablished = false;
 
+// const start = () =>
 ampq.connect(
   {
     hostname: process.env.QUEUE_HOST,
@@ -35,3 +37,15 @@ ampq.connect(
     }, 3600000);
   }
 );
+
+// const sleep = (miliseconds: number) => new Promise((resolve) => setTimeout(resolve, miliseconds));
+
+// while (!connectionEstablished) {
+//   try {
+//     start();
+//   } catch (error) {
+//     console.error(error);
+//     console.log('Retrying connection in 10 seconds');
+//     await sleep(100);
+//   }
+// }

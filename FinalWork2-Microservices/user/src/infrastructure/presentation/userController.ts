@@ -24,7 +24,12 @@ export class UserController extends BaseHttpController {
 
   @httpGet('/')
   private async listUsers(@request() req: Request, @response() res: ExpressResponse) {
-    const users = await this.userService.listUsers(req.query);
+    let users;
+    if (req.query.search) {
+      users = await this.userService.searchUsers(req.query.search as string);
+    } else {
+      users = await this.userService.listUsers(req.query);
+    }
     const userDtos = users.map((user) => UserMapper.toResponseUser(user));
     Response.ok(res, userDtos);
   }

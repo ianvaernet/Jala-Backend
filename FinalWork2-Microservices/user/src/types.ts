@@ -3,6 +3,7 @@ export const DI = {
   UserService: Symbol('UserService'),
   UserRepository: Symbol('UserRepository'),
   AttendanceService: Symbol('AttendanceService'),
+  SearchService: Symbol('SearchService'),
 };
 
 export type Attendance = {
