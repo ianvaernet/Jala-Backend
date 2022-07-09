@@ -4,4 +4,5 @@ export interface SearchService {
   indexUser(user: User): Promise<void>;
   updateUser(id: string, user: User): Promise<void>;
   searchUsers(search: string): Promise<User[]>;
+  deleteUser(id: string): Promise<void>;
 }

@@ -74,5 +74,6 @@ export class UserService {
     if (!isDeleted) {
       throw new NotFoundException(`User with id '${id}' not found`);
     }
+    await this.searchService.deleteUser(id);
   }
 }

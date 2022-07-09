@@ -11,6 +11,13 @@ export class ElasticsearchService implements SearchService {
 
   constructor() {
     this.elasticsearch = new Client({ node: { url: new URL(process.env.ELASTICSEARCH_HOST as string) } });
+    this.elasticsearch.indices.exists({ index: this.index }).then((indexExists) => {
+      if (!indexExists) {
+        this.elasticsearch.indices.create({
+          index: this.index,
+        });
+      }
+    });
   }
 
   public async indexUser(user: User) {
@@ -45,5 +52,12 @@ export class ElasticsearchService implements SearchService {
     const usersFound = data.hits.hits;
     const users = usersFound.map((userFound: any) => UserMapper.toDomain(userFound._source));
     return users;
+  }
+
+  public async deleteUser(id: string) {
+    await this.elasticsearch.delete({
+      index: this.index,
+      id,
+    });
   }
 }
