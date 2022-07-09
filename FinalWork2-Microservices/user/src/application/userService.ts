@@ -49,6 +49,7 @@ export class UserService {
     if (updatedUser.totalAttendance !== user.totalAttendance.getValue()) {
       user.updateTotalAttendance(updatedUser.totalAttendance);
       await this.userRepository.saveUser(user);
+      await this.searchService.updateUser(id, user);
     }
     return user;
   }

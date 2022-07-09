@@ -6,7 +6,8 @@ import { UserMapper } from './userMapper';
 
 @injectable()
 export class ElasticsearchService implements SearchService {
-  public elasticsearch: any;
+  public elasticsearch: Client;
+  private readonly index = 'users';
 
   constructor() {
     this.elasticsearch = new Client({ node: { url: new URL(process.env.ELASTICSEARCH_HOST as string) } });
@@ -14,14 +15,23 @@ export class ElasticsearchService implements SearchService {
 
   public async indexUser(user: User) {
     await this.elasticsearch.index({
-      index: 'users',
+      index: this.index,
+      id: user.id.getValue(),
       document: UserMapper.toPersistence(user),
+    });
+  }
+
+  public async updateUser(id: string, user: User) {
+    await this.elasticsearch.update({
+      index: this.index,
+      id,
+      doc: UserMapper.toPersistence(user),
     });
   }
 
   public async searchUsers(search: string) {
     const query = {
-      index: 'users',
+      index: this.index,
       body: {
         query: {
           multi_match: {
