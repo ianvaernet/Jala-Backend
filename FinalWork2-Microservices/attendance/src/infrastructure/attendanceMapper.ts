@@ -22,6 +22,26 @@ export class AttendanceMapper {
     });
   }
 
+  static fromSerializable(attendance: Record<string, string>) {
+    return new Attendance({
+      id: attendance.id,
+      startDate: attendance.startDate,
+      endDate: attendance.endDate,
+      notes: attendance.notes,
+      userId: attendance.userId,
+    });
+  }
+
+  static toSerializable(attendance: Attendance) {
+    return {
+      id: attendance.id.getValue(),
+      startDate: attendance.startDate.getValue().toISOString(),
+      endDate: attendance.endDate.getValue().toISOString(),
+      notes: attendance.notes?.getValue(),
+      userId: attendance.userId.getValue(),
+    };
+  }
+
   static toResponseDto(attendance: Attendance) {
     return {
       id: attendance.id.getValue(),

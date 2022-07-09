@@ -8,17 +8,24 @@ import { UserService } from './userService';
 import { BadRequestException } from './exceptions';
 import { InvalidValueException } from '../domain/exceptions';
 import { StatsService } from './statsService';
+import { SearchService } from './searchService';
 
 @injectable()
 export class AttendanceService {
   constructor(
     @inject(DI.AttendanceRepository) private attendanceRepository: AttendanceRepository,
     @inject(DI.UserService) private userService: UserService,
-    @inject(DI.StatsService) private statsService: StatsService
+    @inject(DI.StatsService) private statsService: StatsService,
+    @inject(DI.SearchService) private searchService: SearchService
   ) {}
 
   async listAttendances(filters: ListAttendancesFilters) {
     const attendances = this.attendanceRepository.listAttendances(filters);
+    return attendances;
+  }
+
+  async searchAttendances(search: string) {
+    const attendances = await this.searchService.searchAttendances(search);
     return attendances;
   }
 
@@ -32,6 +39,7 @@ export class AttendanceService {
       await this.userService.getUser(attendance.userId.getValue());
       await this.attendanceRepository.saveAttendance(attendance);
       this.statsService.publishMessage(JSON.stringify({ event: 'AttendanceCreated', userId: attendance.userId.getValue() }));
+      await this.searchService.indexAttendance(attendance);
       return attendance;
     } catch (error) {
       if (error instanceof InvalidValueException) {
@@ -45,9 +53,11 @@ export class AttendanceService {
     const attendance = (await this.attendanceRepository.findAttendance(id)) as Attendance;
     await this.attendanceRepository.deleteAttendance(id);
     this.statsService.publishMessage(JSON.stringify({ event: 'AttendanceDeleted', userId: attendance.userId.getValue() }));
+    await this.searchService.deleteAttendance(id);
   }
 
   async deleteUserAttendances(userId: string) {
     await this.attendanceRepository.deleteUserAttendances(userId);
+    await this.searchService.deleteUserAttendances(userId);
   }
 }

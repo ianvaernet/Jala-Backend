@@ -14,11 +14,16 @@ export class AttendanceController extends BaseHttpController {
 
   @httpGet('attendances')
   private async listAttendance(@request() req: Request, @response() res: ExpressResponse) {
-    const filters: ListAttendancesFilters = {};
-    if (req.query.userId) {
-      filters.userId = req.query.userId as string;
+    let attendances;
+    if (req.query.search) {
+      attendances = await this.attendanceService.searchAttendances(req.query.search as string);
+    } else {
+      const filters: ListAttendancesFilters = {};
+      if (req.query.userId) {
+        filters.userId = req.query.userId as string;
+      }
+      attendances = await this.attendanceService.listAttendances(filters);
     }
-    const attendances = await this.attendanceService.listAttendances(filters);
     const attendanceDtos = attendances.map((attendance) => AttendanceMapper.toResponseDto(attendance));
     Response.ok(res, attendanceDtos);
   }
