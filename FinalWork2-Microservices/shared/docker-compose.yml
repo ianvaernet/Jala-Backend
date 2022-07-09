@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+  elasticsearch:
+    image: elasticsearch:8.3.1
+    container_name: elasticsearch
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: false
+      xpack.security.transport.ssl.enabled: false
+    volumes:
+      - './elasticsearch:/usr/share/elasticsearch/data'
+    ports:
+      - "9200:9200"
+      - "9300:9300"

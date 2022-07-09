@@ -1,0 +1,26 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "docker-compose -p backend-shared up -d",
+    "stop": "docker-compose -p backend-shared stop"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/amqplib": "^0.8.2",
+    "@types/node": "^18.0.0",
+    "@types/node-fetch": "^2.6.2",
+    "concurrently": "^7.2.2",
+    "eslint": "^8.18.0",
+    "nodemon": "^2.0.18",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.0",
+    "node-fetch": "^2.6.7",
+    "reflect-metadata": "^0.1.13"
+  }
+}
