@@ -6,7 +6,6 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "create-test-db": "export $(cat .env | xargs) && CONTAINER_ID=$(docker ps --filter name=\"user-db\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID mysql -uroot -p$DB_ROOT_PASSWORD -e \"CREATE DATABASE ${DB_NAME}_test; GRANT ALL ON ${DB_NAME}_test.* TO 'user'@'%';\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --report-unused-disable-directives",
     "local-start": "nodemon dist",
     "local-test": "NODE_ENV=test && jest",
@@ -33,6 +32,8 @@
     "eslint": "^8.18.0",
     "jest": "^28.1.1",
     "nodemon": "^2.0.18",
+    "ts-jest": "^28.0.5",
+    "ts-node": "^10.8.2",
     "typescript": "^4.7.4"
   },
   "dependencies": {

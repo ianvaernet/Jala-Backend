@@ -5,8 +5,8 @@ export class NumberValueObject {
   public propertyName: string;
 
   constructor(value: number, propertyName: string) {
-    Guard.ensureIsNumber(value, this.propertyName);
-    Guard.ensureMinValue(value, 0, this.propertyName);
+    Guard.ensureIsNumber(value, propertyName);
+    Guard.ensureMinValue(value, 0, propertyName);
     this.value = value;
     this.propertyName = propertyName;
   }

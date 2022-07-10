@@ -45,13 +45,20 @@ export class UserService {
   }
 
   async updateUser(id: string, updatedUser: { totalAttendance: number }) {
-    const user = await this.getUser(id, false);
-    if (updatedUser.totalAttendance !== user.totalAttendance.getValue()) {
-      user.updateTotalAttendance(updatedUser.totalAttendance);
-      await this.userRepository.saveUser(user);
-      await this.searchService.updateUser(id, user);
+    try {
+      const user = await this.getUser(id, false);
+      if (updatedUser.totalAttendance !== user.totalAttendance.getValue()) {
+        user.updateTotalAttendance(updatedUser.totalAttendance);
+        await this.userRepository.saveUser(user);
+        await this.searchService.updateUser(id, user);
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof InvalidValueException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
     }
-    return user;
   }
 
   async getUser(id: string, includeAttendances: boolean) {
@@ -61,7 +68,7 @@ export class UserService {
     }
 
     if (includeAttendances) {
-      const attendances = await this.attendanceService.listAttendancesByUserId(user.id.getValue());
+      const attendances = await this.attendanceService.listAttendancesByUserId(id);
       user.attendances = attendances;
     }
 

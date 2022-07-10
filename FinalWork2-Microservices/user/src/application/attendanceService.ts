@@ -6,6 +6,7 @@ import { Attendance } from '../types';
 @injectable()
 export class AttendanceService {
   AttendanceApiUrl: string;
+
   constructor() {
     EventEmitter.setMaxListeners(50);
     this.AttendanceApiUrl = process.env.ATTENDANCE_API_URL as string;

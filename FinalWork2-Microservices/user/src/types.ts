@@ -10,6 +10,7 @@ export type Attendance = {
   id: string;
   startDate: string;
   endDate: string;
+  userId: string;
   notes?: string;
 };
 
