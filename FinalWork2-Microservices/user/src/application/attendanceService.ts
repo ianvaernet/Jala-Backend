@@ -1,11 +1,13 @@
 import { injectable } from 'inversify';
 import fetch from 'node-fetch';
+import { EventEmitter } from 'stream';
 import { Attendance } from '../types';
 
 @injectable()
 export class AttendanceService {
   AttendanceApiUrl: string;
   constructor() {
+    EventEmitter.setMaxListeners(50);
     this.AttendanceApiUrl = process.env.ATTENDANCE_API_URL as string;
   }
 

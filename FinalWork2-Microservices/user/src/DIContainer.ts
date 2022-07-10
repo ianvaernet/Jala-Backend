@@ -14,4 +14,4 @@ DIContainer.bind<UserController>(DI.UserController).to(UserController);
 DIContainer.bind<UserService>(DI.UserService).to(UserService);
 DIContainer.bind<UserRepository>(DI.UserRepository).to(UserTypeOrmRepository);
 DIContainer.bind<AttendanceService>(DI.AttendanceService).to(AttendanceService);
-DIContainer.bind<SearchService>(DI.SearchService).to(ElasticsearchService);
+DIContainer.bind<SearchService>(DI.SearchService).to(ElasticsearchService).inSingletonScope();
