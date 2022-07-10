@@ -1,6 +1,5 @@
 import { injectable } from 'inversify';
 import { AttendanceRepository } from '../application/attendanceRepository';
-import { NotFoundException } from '../application/exceptions';
 import { Attendance } from '../domain/attendance';
 import { ListAttendancesFilters } from '../types';
 import { AttendanceEntity } from './attendance.entity';
@@ -27,12 +26,11 @@ export class AttendanceMongooseRepository implements AttendanceRepository {
 
   async deleteAttendance(id: string) {
     const { deletedCount } = await AttendanceEntity.deleteOne({ _id: id });
-    if (deletedCount < 1) {
-      throw new NotFoundException(`Attendance with id ${id} not found`);
-    }
+    return deletedCount > 0;
   }
 
   async deleteUserAttendances(userId: string) {
     const { deletedCount } = await AttendanceEntity.deleteMany({ userId });
+    return deletedCount > 0;
   }
 }

@@ -3,9 +3,9 @@ import { Attendance } from '../domain/attendance';
 import { AttendanceRepository } from './attendanceRepository';
 import { CreateAttendanceRequest } from './dto/createAttendanceRequest';
 import { v4 as uuid } from 'uuid';
-import { DI, ListAttendancesFilters } from '../types';
+import { DI, Event, ListAttendancesFilters } from '../types';
 import { UserService } from './userService';
-import { BadRequestException } from './exceptions';
+import { BadRequestException, NotFoundException } from './exceptions';
 import { InvalidValueException } from '../domain/exceptions';
 import { StatsService } from './statsService';
 import { SearchService } from './searchService';
@@ -36,9 +36,13 @@ export class AttendanceService {
 
     try {
       const attendance = new Attendance({ ...newAttendance, id: uuid() });
-      await this.userService.getUser(attendance.userId.getValue());
+      const userId = attendance.userId.getValue();
+      const user = await this.userService.getUser(userId);
+      if (!user) {
+        throw new NotFoundException(`There is no user with id ${userId}`);
+      }
       await this.attendanceRepository.saveAttendance(attendance);
-      this.statsService.publishMessage(JSON.stringify({ event: 'AttendanceCreated', userId: attendance.userId.getValue() }));
+      this.statsService.publishMessage(JSON.stringify({ event: Event.AttendanceCreated, userId: attendance.userId.getValue() }));
       await this.searchService.indexAttendance(attendance);
       return attendance;
     } catch (error) {
@@ -51,8 +55,11 @@ export class AttendanceService {
 
   async deleteAttendance(id: string) {
     const attendance = (await this.attendanceRepository.findAttendance(id)) as Attendance;
-    await this.attendanceRepository.deleteAttendance(id);
-    this.statsService.publishMessage(JSON.stringify({ event: 'AttendanceDeleted', userId: attendance.userId.getValue() }));
+    const isDeleted = await this.attendanceRepository.deleteAttendance(id);
+    if (!isDeleted) {
+      throw new NotFoundException(`Attendance with id ${id} not found`);
+    }
+    this.statsService.publishMessage(JSON.stringify({ event: Event.AttendanceDeleted, userId: attendance.userId.getValue() }));
     await this.searchService.deleteAttendance(id);
   }
 

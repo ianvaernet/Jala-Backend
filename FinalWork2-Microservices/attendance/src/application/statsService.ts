@@ -35,17 +35,6 @@ export class StatsService {
     this.channel.sendToQueue(this.queue, Buffer.from(message));
   }
 
-  connectAndPublishMessage(message: string) {
-    ampq.connect(queueConnectionParams, (error, connection) => {
-      if (error) throw new Error(error);
-      connection.createChannel((err, channel) => {
-        if (err) throw new Error(err);
-        this.channel.assertQueue(this.queue, { durable: false });
-        this.channel.sendToQueue(this.queue, Buffer.from(message));
-      });
-    });
-  }
-
   closeConnection() {
     this.connection.close();
   }

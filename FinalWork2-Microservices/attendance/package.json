@@ -11,11 +11,11 @@
     "local-test": "NODE_ENV=test && jest",
     "local-test:coverage": "NODE_ENV=test && jest --coverage",
     "restart": "npm run stop && npm run start",
-    "ssh": "CONTAINER_ID=$(docker ps --filter name=\"user-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID sh",
+    "ssh": "CONTAINER_ID=$(docker ps --filter name=\"attendance-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID sh",
     "start": "docker-compose -p backend-attendance up -d",
     "stop": "docker-compose -p backend-attendance stop",
-    "test": "CONTAINER_ID=$(docker ps --filter name=\"user-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test",
-    "test:coverage": "CONTAINER_ID=$(docker ps --filter name=\"user-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test:coverage"
+    "test": "CONTAINER_ID=$(docker ps --filter name=\"attendance-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test",
+    "test:coverage": "CONTAINER_ID=$(docker ps --filter name=\"attendance-app\" --format \"{{.ID}}\") && docker exec -it $CONTAINER_ID npm run local-test:coverage"
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +31,8 @@
     "eslint": "^8.18.0",
     "jest": "^28.1.1",
     "nodemon": "^2.0.18",
+    "ts-jest": "^28.0.5",
+    "ts-node": "^10.8.2",
     "typescript": "^4.7.4"
   },
   "dependencies": {
